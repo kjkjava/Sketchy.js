@@ -14,3 +14,7 @@ Practical uses include symbol classification (e.g. [Detexify](http://detexify.ki
 About Us
 --------
 We are three guy working on a project for our computer vision class at The University of Georgia (Spring 2013).
+
+Development Notes
+-----------------
+* `sketchy.js` should not be edited, as `sketchy.coffee` edits will be compiled on top of it.  The test webpage references the JS file, though.

@@ -23,7 +23,7 @@ Development Notes
 * Different types of "shapes" to consider (Be very clear about what your algorithms accepts as input.  Will you preprocess it?)
 	* Vector
 		* Most likely, you will be accepting Raphael SketchPad's JSON/SVG output.
-			* This is primarily a set of simple point-to-point paths (in the order they were drawn).  See the "moveto" and "lineto" commands in the [SVG Documentationn](http://www.w3.org/TR/2011/REC-SVG11-20110816/paths.html#PathDataMovetoCommands).
+			* This is primarily a set of simple point-to-point paths (in the order they were drawn).  See the "moveto" and "lineto" commands in the [SVG Documentation](http://www.w3.org/TR/2011/REC-SVG11-20110816/paths.html#PathDataMovetoCommands).
 			* SketchPad typically chooses stroke color (black) and stroke width (5) for you, so does your algorithm ignore that?
 		* Will you disregard or take advantage of order drawn?
 		* What may appear as a single line may actually be the same line drawn in the same place multiple times.  Be explicit in how you choose to handle this.

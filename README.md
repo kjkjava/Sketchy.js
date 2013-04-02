@@ -17,9 +17,9 @@ About Us
 --------
 We are three guys working on a project for our computer vision class at The University of Georgia (Spring 2013).  In alphabetical order:
 
-* Kyle Krafka (@kjkjava)
-* Jordan Marchetto (@jordanmarchetto)
-* Betim Sojeva (@beddims)
+* Kyle Krafka ([kjkjava](https://github.com/kjkjava/))
+* Jordan Marchetto ([jordanmarchetto](https://github.com/jordanmarchetto/))
+* Betim Sojeva ([beddims](https://github.com/beddims/))
 
 Development Notes
 -----------------

@@ -15,7 +15,11 @@ Stay tuned.
 
 About Us
 --------
-We are three guys working on a project for our computer vision class at The University of Georgia (Spring 2013).
+We are three guys working on a project for our computer vision class at The University of Georgia (Spring 2013).  In alphabetical order:
+
+* Kyle Krafka (@kjkjava)
+* Jordan Marchetto (@jordanmarchetto)
+* Betim Sojeva (@beddims)
 
 Development Notes
 -----------------
@@ -32,3 +36,7 @@ Development Notes
 		* No potential overlapping
 		* The notion of a path is not well-defined
 		* Strokes are not ordered
+
+Credits
+-------
+* paper.png is from [Subtle Patterns](http://subtlepatterns.com/)

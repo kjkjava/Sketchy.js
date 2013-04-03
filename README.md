@@ -23,7 +23,6 @@ We are three guys working on a project for our computer vision class at The Univ
 
 Development Notes
 -----------------
-* `sketchy.js` should not be edited, as `sketchy.coffee` edits will be compiled on top of it.  The test webpage references the JS file, though.
 * Different types of "shapes" to consider (Be very clear about what your algorithms accepts as input.  Will you preprocess it?)
 	* Vector
 		* Most likely, you will be accepting Raphael SketchPad's JSON/SVG output.

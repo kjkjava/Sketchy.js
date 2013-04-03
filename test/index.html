@@ -15,28 +15,26 @@
 		<script src="raphael-min.js"></script>
 		<script src="raphael.sketchpad.js"></script>
 		<script src="../sketchy.js"></script>
-        <script type="text/javascript">
-            $(document).ready(function() {
-                  var sketchpad_editor_1 = Raphael.sketchpad("sketchpad_editor_1", {
-                                                             width: 300,
-                                                             height: 300,
-                                                             editing: true // default
-                                            });
-                              
-                  sketchpad_editor_1.change(function() {
-                                            $("#input1").val(sketchpad_editor_1.json());
-                                            });
-                  
-                  var sketchpad_editor_2 = Raphael.sketchpad("sketchpad_editor_2", {
-                                                             width: 300,
-                                                             height: 300,
-                                                             editing: true // default
-                                            });
-                  sketchpad_editor_2.change(function() {
-                                            $("#input2").val(sketchpad_editor_2.json());
-                                        });
-            });
-        </script>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				var sketchpad_editor_1 = Raphael.sketchpad("sketchpad_editor_1", {
+															width: 300,
+															height: 300,
+															editing: true // default
+											});
+				sketchpad_editor_1.change(function() {
+											$("#input1").val(sketchpad_editor_1.json());
+											});
+				var sketchpad_editor_2 = Raphael.sketchpad("sketchpad_editor_2", {
+															width: 300,
+															height: 300,
+															editing: true // default
+											});
+				sketchpad_editor_2.change(function() {
+											$("#input2").val(sketchpad_editor_2.json());
+											});
+			});
+		</script>
 	</head>
 	<body>
 		<div id="container">
@@ -51,8 +49,6 @@
 				<!-- Sketch box 1 -->
 				<em>Sketch 1 Editor</em>
 				<div id="sketchpad_editor_1" class="sketchpad"></div>
-
-
 				<br />
 				<!-- Data viewer 1 -->
 				<em>Sketch 1 Data</em>
@@ -65,7 +61,6 @@
 				<!-- Sketch box 2 -->
 				<em>Sketch 2 Editor</em>
 				<div id="sketchpad_editor_2" class="sketchpad"></div>
-
 				<br />
 				<!-- Data viewer 2 -->
 				<em>Sketch 2 Data</em>
@@ -73,7 +68,7 @@
 					<textarea id="input2" name="input2" class="databox"></textarea>
 				</form>
 			</div><!--.sketchcontainer-->
-
+			<div style="clear:both;"></div>
 		</div><!--#container-->
 	</body>
 </html>

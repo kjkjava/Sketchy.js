@@ -34,11 +34,11 @@
 											$("#input2").val(sketchpad_editor_2.json());
 											});
 				// Test Functions
-				$("#buttonMethodNameHere").click(function() {
-					var sketch1Data = sketchpad_editor_1.json();
-					console.log("The method was tested!");
-					console.log("Sketch 1's JSON data is...");
-					console.log(sketch1Data);
+				$("#buttonConvertSVGtoPointArrays").click(function() {
+					var result, i;
+					result = Sketchy.convertSVGtoPointArrays(sketchpad_editor_1.json());
+					console.log("convertSVGtoPointArrays result: ");
+					console.log(result);
 				});
 			});
 		</script>
@@ -75,9 +75,9 @@
 			</div><!--.sketchcontainer-->
 			<div style="clear:both;"></div>
 			<br />
-			<h3>methodNameHere(arg)</h3>
+			<h3>convertSVGtoPointArrays(json)</h3>
 			<!-- See the jQuery action above -->
-			<p><input type="button" id="buttonMethodNameHere" value="Test on Sketch 1"></input></p>
+			<p><input type="button" id="buttonConvertSVGtoPointArrays" value="Test on Sketch 1"></input></p>
 		</div><!--#container-->
 	</body>
 </html>

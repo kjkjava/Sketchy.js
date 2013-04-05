@@ -16,7 +16,7 @@
 		<script src="raphael.sketchpad.js"></script>
 		<script src="../sketchy.js"></script>
 		<script type="text/javascript">
-			$(document).ready(function() {
+			$(document).ready(function() { // FYI, "$(function(){" is an alias to this line
 				var sketchpad_editor_1 = Raphael.sketchpad("sketchpad_editor_1", {
 															width: 300,
 															height: 300,
@@ -33,6 +33,13 @@
 				sketchpad_editor_2.change(function() {
 											$("#input2").val(sketchpad_editor_2.json());
 											});
+				// Test Functions
+				$("#buttonMethodNameHere").click(function() {
+					var sketch1Data = sketchpad_editor_1.json();
+					console.log("The method was tested!");
+					console.log("Sketch 1's JSON data is...");
+					console.log(sketch1Data);
+				});
 			});
 		</script>
 	</head>
@@ -40,7 +47,8 @@
 		<div id="container">
 			<h2>Sketchy.js Test Cases</h2>
 			<p>
-				This file is for developers to implement unit tests on JavaScript functions.
+				This file is for developers to implement unit tests on JavaScript functions.<br />
+				<strong>Note:</strong> Output may be logged to the console.
 			</p>
 			<div class="sketchcontainer">
 				<!-- Sketch box 1 -->
@@ -67,8 +75,9 @@
 			</div><!--.sketchcontainer-->
 			<div style="clear:both;"></div>
 			<br />
-			<h3>functionName(param)</h3>
-			<p>Your test here!</p>
+			<h3>methodNameHere(arg)</h3>
+			<!-- See the jQuery action above -->
+			<p><input type="button" id="buttonMethodNameHere" value="Test on Sketch 1"></input></p>
 		</div><!--#container-->
 	</body>
 </html>

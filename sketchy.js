@@ -1,6 +1,6 @@
 // Sketchy.js
 (function() {
-  var randomShapeMatch, shapeContextMatch;
+  var randomShapeMatch, shapeContextMatch, hausdorffDistance;
 
   /* Jordan's Algorithms */
   // Test function for front-end application development
@@ -14,5 +14,7 @@
   };
 
   /* Betim's Algorithms */
-
+  hausdorffDistance = function(shape1, shape2) {
+  	return 0;
+  };
 }).call(this);

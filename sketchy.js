@@ -49,6 +49,23 @@
     return 0;
   };
 
+  // Compute the Euclidean distance (as a crow flies) between two points.
+  // Shortest distance between two pixels
+  Sketchy.euclideanDistance = function(x1, y1, x2, y2) {
+    return Math.sqrt(Math.pow(x1-x2, 2) + Math.pow(y1-y2, 2));
+  };
+
+  // Compute the city block distance (or Manhattan distance) between two points.
+  // Shortest 4-connected path between two pixels
+  Sketchy.cityBlockDistance = function(x1, y1, x2, y2) {
+    return Math.abs(x1-x2) + Math.abs(y1-y2);
+  };
+
+  // Compute the chessboard distance between two points.
+  Sketchy.chessboardDistance = function(x1, y1, x2, y2) {
+    return Math.max(Math.abs(x1-x2), Math.abs(y1-y2));
+  };
+
   /* Betim's Algorithms */
   Sketchy.hausdorffDistance = function(shape1, shape2) {
   	return 0;

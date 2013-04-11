@@ -116,4 +116,14 @@
     var h1 = Sketchy.h(shape2, shape1);
     return Math.max(h0, h1);
   };
+  
+  // TODO: Opening and Closing Operation
+  Sketchy.morphologyOperation = function(shape, frame_size, operation)
+  {
+  	return 0;
+  };
+
+  Sketchy.bottleneckDistance = function(shape1, shape2) {
+  	return 0;
+  };
 })(this);

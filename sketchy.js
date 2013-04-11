@@ -66,33 +66,33 @@
     return Math.max(Math.abs(x1-x2), Math.abs(y1-y2));
   };
 
-  Sketchy.h = function(shape1, shape2) {
-	var h_max = Number.MIN_VALUE, 
-		h_min;
-	var x1,x2,
-		y1,y2;
-	for (y1 = 0; y1 < shape1.length; y1++) {
-		for (x1 = 0; x1 < shape1[y1].length; x1++) {
-			if (A[x1][y1] == 0)
-				continue;
-			h_min = Number.MAX_VALUE;
-			for (y2 = 0; y2 < shape2.length; y2++) {
-				for (x2 = 0; x2 < shape2[y2].length; x2++) {
-					if (B[x2][y2] == 0)
-						continue;
-					var euclDis = Sketchy.euclideanDistance(x1,y1,x2,y2);
-					if (euclDis < h_min)
-						h_min = euclDis;
-				}
-			}
-			if (h_min > h_max)
-				h_max = h_min;
-		}
-	}
-	return h_max;
+  Sketchy.h = function(shape0, shape2) {
+    var h_max = Number.MIN_VALUE, h_min;
+    var x0,x2, y0,y2;
+    for (y0 = 0; y0 < shape0.length; y0++) {
+      for (x0 = 0; x0 < shape0[y0].length; x0++) {
+        if (shape0[x0][y0] == 0)
+          continue;
+        h_min = Number.MAX_VALUE;
+        for (y2 = 0; y2 < shape2.length; y2++) {
+          for (x2 = 0; x2 < shape2[y2].length; x2++) {
+            if (shape2[x2][y2] == 0)
+              continue;
+            var euclDis = Sketchy.euclideanDistance(x0,y0,x2,y2);
+            if (euclDis < h_min)
+              h_min = euclDis;
+          }
+        }
+        if (h_min > h_max)
+          h_max = h_min;
+      }
+    }
+    return h_max;
   };
   /* Betim's Algorithms */
   Sketchy.hausdorffDistance = function(shape1, shape2) {
-  	return Math.max(Sketchy.h(shape1,shape2), Sketchy.h(shape2,shape1));
+    var h0 = Sketchy.h(shape0,shape2);
+    var h1 = Sketchy.h(shape2,shape0);
+    return Math.max(h0,h1);
   };
 })(this);

@@ -7,7 +7,7 @@
 // Development started March 2013
 //
 
-// Immediately invoke an annonymous function to keep the global scope clean.
+// Immediately invoke an anonymous function to keep the global scope clean.
 // Parameters:
 // - global: will be the global object; called with "this" from global scope
 // - undefined: keeps "undefined" undefined; no 2nd arg will make it undefined
@@ -66,6 +66,23 @@
     return Math.max(Math.abs(x1-x2), Math.abs(y1-y2));
   };
 
+  // Compute the length of a path.
+  // Given an array of points in {x: Number, y: Number} format, calculate
+  // the sum of the distances between consecutive points.  The distance
+  // function must be specified.
+  // TODO: Currently, there is no error checking (e.g. a valid callback).
+  //       Either add it or make private.
+  Sketchy.computeLength = function(path, distanceFunction) {
+    var distance, i;
+
+    distance = 0;
+    for(i=0; i<path.length-1; i++) {
+      distance += distanceFunction(path[i].x, path[i].y, path[i+1].x, path[i+1].y);
+    }
+    return distance;
+  };
+
+  /* Betim's Algorithms */
   Sketchy.h = function(shape0, shape2) {
     var h_max = Number.MIN_VALUE, h_min;
     var x0,x2, y0,y2;
@@ -89,7 +106,7 @@
     }
     return h_max;
   };
-  /* Betim's Algorithms */
+
   Sketchy.hausdorffDistance = function(shape1, shape2) {
     var h0 = Sketchy.h(shape0,shape2);
     var h1 = Sketchy.h(shape2,shape0);

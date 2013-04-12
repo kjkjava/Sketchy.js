@@ -1,0 +1,133 @@
+/**************
+ *  Tab Styles
+ **************/
+.tab{
+	border: 1px solid black;
+	/*border-bottom: 2px solid white;*/
+	float: left;
+	margin: 0px 5px;
+	margin-bottom: -1px;
+	padding: 10px;
+	background-color: #ddd;
+}
+
+.tab_active{
+	background-color: #fff;
+	border-bottom: 1px solid white;
+}
+.tab:hover{cursor: pointer;}
+
+.tab_wrap{
+
+}
+
+/******************
+ * Demo box Styles
+ ******************/
+
+.demo{
+	display: none;
+	clear: both;
+	border:1px solid black;
+	background-color: #fff;
+	margin: 0px;
+	padding: 10px;
+
+}
+.demo_wrap{
+	height: 600px;
+	width: 900px;
+	max-width: 900px;
+	margin: 0 auto;
+}
+
+
+/*******************************
+ * Sketchpad and General Styles
+ *******************************/
+
+.sketchpad {
+	border: 1px solid black;
+	margin: 5px;
+	float: left;
+}
+
+
+.align_middle{
+	margin-left: auto;
+	margin-right: auto;
+	width: 900px;
+}
+.clear{clear:both;}
+
+
+.button{
+	padding: 5px;
+	border-radius: 5px;
+	border: 1px solid black;
+	background: #fff;
+}
+.button:hover{
+	cursor:pointer;
+	background-color: #eee;
+}
+
+.clear_button{
+	width: 40px;
+	margin-left: 5px;
+	padding: 3px;
+	
+}
+
+/*******************
+ * Demo 1 Styles 
+ *******************/
+
+ .result_box{
+ 	margin-left: 20px;
+ 	margin-top: 20px;
+ 	float: left;
+ }
+
+ /*******************
+ * Demo 2 Styles 
+ *******************/
+#demo_2_directions{
+	font-size: 1.2em;
+}
+#demo_2_text{
+	font-size: 1.3em;
+	font-weight: bold;
+}
+.new_letter_button{
+	width: 100px;
+	margin-left: 5px;
+	
+ }
+
+ .done_button{
+ 	width: 50px;
+	margin-left: 5px;
+	padding: 3px;
+ }
+#done_button_2{
+	float: left;
+}
+
+ #clear_button_2{
+ 	float:left;
+ }
+
+ #accuracy_2{
+ 	margin-left: 5px;
+ }
+
+ #demo_2 > p, #demo_2 > div{
+ 	margin-left: 5px;
+ }
+
+ .accuracy_box{
+ 	padding: 5px;
+ 	width: 200px;
+ 	margin-top: 10px;
+ }

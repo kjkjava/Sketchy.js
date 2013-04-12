@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Sketchy.js Tester</title>
+		<link rel="stylesheet" href="style.css">
+
+		<script src="json2.js"></script>
+		<!-- The // notation will not work well locally on the file:// protocol, so the local fallback will be used. -->
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+		<script>window.jQuery || document.write('<script src="jquery-1.9.1.min.js"><\/script>')</script>
+		<!-- jQuery Migrate must be used... see my bug report:
+				https://github.com/ianli/raphael-sketchpad/issues/15 -->
+		<script src="jquery-migrate-1.1.1.min.js"></script>
+		<script src="raphael-min.js"></script>
+		<script src="raphael.sketchpad.js"></script>
+		<script src="../sketchy.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				var sketchpad_editor_1 = Raphael.sketchpad("sketchpad_editor_1", {
+															width: 300,
+															height: 300,
+															editing: true // default
+											});
+				sketchpad_editor_1.change(function() {
+											$("#input1").val(sketchpad_editor_1.json());
+											});
+				var sketchpad_editor_2 = Raphael.sketchpad("sketchpad_editor_2", {
+															width: 300,
+															height: 300,
+															editing: true // default
+											});
+				sketchpad_editor_2.change(function() {
+											$("#input2").val(sketchpad_editor_2.json());
+											});
+			});
+		</script>
+	</head>
+	<body>
+		<div id="container">
+			<h2>Sketchy.js Tester</h2>
+			<p>
+				Looking to do something awesome with Sketchy.js?  This is the place to start.
+				Just start drawing in the gray boxes below (that's Rapha&#235;l SketchPad at work)
+				and the JSON data that represents the drawing will appear in the appropriate
+				text area below it.  It looks scary, but Rapha&#235;l understands it!
+			</p>
+			<div class="sketchcontainer">
+				<!-- Sketch box 1 -->
+				<em>Sketch 1 Editor</em>
+				<div id="sketchpad_editor_1" class="sketchpad"></div>
+				<br />
+				<!-- Data viewer 1 -->
+				<em>Sketch 1 Data</em>
+				<form action="" method="post" onsubmit="return false;">
+					<textarea id="input1" name="input1" class="databox"></textarea>
+				</form>
+			</div><!--.sketchcontainer-->
+
+			<div class="sketchcontainer">
+				<!-- Sketch box 2 -->
+				<em>Sketch 2 Editor</em>
+				<div id="sketchpad_editor_2" class="sketchpad"></div>
+				<br />
+				<!-- Data viewer 2 -->
+				<em>Sketch 2 Data</em>
+				<form action="" method="post" onsubmit="return false;">
+					<textarea id="input2" name="input2" class="databox"></textarea>
+				</form>
+			</div><!--.sketchcontainer-->
+			<div style="clear:both;"></div>
+		</div><!--#container-->
+	</body>
+</html>

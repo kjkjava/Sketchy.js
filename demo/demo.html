@@ -1,0 +1,266 @@
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8' />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+  <meta name="description" content="Sketchy.js: " />
+
+  <link rel="stylesheet" type="text/css" media="screen" href="stylesheet.css">
+  <link rel="stylesheet" type="text/css" media="screen" href="styles.css">
+  <script src="json2.js"></script>
+  <!-- The // notation will not work well locally on the file:// protocol, so the local fallback will be used. -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>window.jQuery || document.write('<script src="jquery-1.9.1.min.js"><\/script>')</script>
+		<!-- jQuery Migrate must be used... see my bug report:
+    https://github.com/ianli/raphael-sketchpad/issues/15 -->
+    <script src="jquery-migrate-1.1.1.min.js"></script>
+    <script src="raphael-min.js"></script>
+    <script src="raphael.sketchpad.js"></script>
+
+    <script type="text/javascript">
+			$(document).ready(function() { // FYI, "$(function(){" is an alias to this line
+
+
+        //////////////////
+        //  Tab Control
+        ///////////////////
+
+        //set the first demo to be displayed
+        demoNum = "2"  //change this back to 1 when done
+
+        //display the first demo by default
+        $('#demo_' + demoNum).show();
+        $('#tab_' + demoNum).addClass('tab_active');
+
+        //make the tabs clickable
+        $('.tab').click(function(){
+          var id = "#demo_" + $(this).attr('id').split("_")[1];
+          
+          //update tabs
+          $('.tab').removeClass('tab_active');
+          $(this).addClass("tab_active");
+          
+          //update demo containers
+          $(".demo").slideUp(); //these animations are tentative, maybe flash white, then fade in the new content ... idk
+          $(id).slideDown();
+        });
+
+
+        //set up the first demo
+        initDemo1();
+
+        //set up the second demo
+        initDemo2();
+
+
+      });
+
+      /////////////////////
+      // Demo 1
+      /////////////////////
+      function initDemo1(){
+          //initialize editor 1
+          var sketchpad_editor_obj_1= Raphael.sketchpad("sketchpad_editor_1", {
+              width: 200,
+              height: 200,
+              editing: true // default
+          });
+
+          var results = ["", "&alpha;", "&beta;", "&gamma;", "&delta;", "&epsilon;", "&zeta;", "&eta;", "&theta;", "&iota;", "&kappa;", 
+                        "&lambda;", "&mu;",    "&nu;",   "&xi;",      "&pi;",    "&rho;", "&sigma;", "&tau;",   "&upsilon;", "&omega;"];
+
+          sketchpad_editor_obj_1.change(function() {
+                //generate a random percent based on the json data
+                jsontext = sketchpad_editor_obj_1.json();
+                rand = Math.random(jsontext);
+                percent = Math.round(rand*10000)/100
+                percentStr = percent +"%"
+
+                //get a random character
+                randInd = Math.floor(Math.random() * (results.length - 1 + 1)) + 1;
+                //console.log(jsontext)
+                if (jsontext == "[]"){
+                  percentStr = ""
+                  randInd = 0
+                }
+                $("#result_1").text(percentStr);
+                $("#res_text_1").html(results[randInd]);
+              });
+
+          //set up buttons
+          $('#clear_button_1').click(function(){sketchpad_editor_obj_1.clear()});
+
+ 
+
+      }//end initDemo1
+
+      /////////////////////
+      // Demo 2
+      /////////////////////
+      function initDemo2(){
+          //initialize editor 2
+          var sketchpad_editor_obj_2= Raphael.sketchpad("sketchpad_editor_2", {
+              width: 200,
+              height: 200,
+              editing: true // default
+          });
+
+          function newLetter(){
+            items = ["a", "b", "c", "d", "e", 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+            var item = items[Math.floor(Math.random()*items.length)];
+            toUp = (Math.floor(Math.random() *2)%2==0)?true:false;
+            if(toUp==true)
+              item= item.toUpperCase()
+            return item
+          }
+
+          sketchpad_editor_obj_2.change(function() {
+                //generate a random percent based on the json data
+                jsontext = sketchpad_editor_obj_2.json();
+                rand = Math.random(jsontext);
+                percent = Math.round(rand*10000)/100
+                percentStr = percent +"%"
+
+                //get a random character
+                //randInd = Math.floor(Math.random() * (results.length - 1 + 1)) + 1;
+                //console.log(jsontext)
+                if (jsontext == "[]"){
+                  percentStr = ""
+                  //randInd = 0
+                }
+                $("#result_2").text(percentStr);
+
+                if(percent > 70){
+                  $("#accuracy_2").css("background-color", "#75FF75");
+                } else if (percent > 40){
+                  $("#accuracy_2").css("background-color", "#FFAD5C");
+                } else {
+                  $("#accuracy_2").css("background-color", "#FF3333");
+
+                }
+
+                //$("#res_text_1").html(results[randInd]);
+              });
+
+          //set up buttons
+          $('#clear_button_2').click(function(){
+            sketchpad_editor_obj_2.clear();
+            $("#accuracy_2").css("background-color", "#ffffff");
+          });
+          $('#new_letter_button_2').click(function(){             
+            $("#demo_2_text").html(newLetter());
+            sketchpad_editor_obj_2.clear();
+            $("#accuracy_2").css("background-color", "#ffffff");
+
+          });
+          $("#done_button_2").click(function(){
+            $("#demo_2_text").html(newLetter());
+            sketchpad_editor_obj_2.clear();
+            $("#accuracy_2").css("background-color", "#ffffff");
+
+          });
+
+      }
+</script>
+<title>Sketchy.js</title>
+</head>
+
+<body>
+
+
+
+  <!-- HEADER -->
+  <div id="header_wrap" class="outer">
+    <header class="inner">
+      <a id="forkme_banner" href="">View on GitHub</a>
+
+      <div class="align_middle">
+        <h1 id="project_title">Sketchy.js</h1>
+        <h2 id="project_tagline">Our tagline</h2>
+      </div>
+
+      <section id="downloads">
+        <a class="zip_download_link" href="">Download this project as a .zip file</a>
+        <a class="tar_download_link" href="">Download this project as a tar.gz file</a>
+      </section>
+    </header>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div id="main_content_wrap" class="outer">
+    <section id="main_content" class="inner">
+      <div class="align_middle">
+       <h3>Welcome to Sketchy.js.</h3>
+       <p>Here is some information about Sketchy.js.  It can be used to cure cancer.  Simply by reconfiguring the protons in magnets, the scientists behind Sketchy.js were able to compute the angular velocity of dinosaurs as they cross the Baltic Sea.</p>
+       
+       <p>Initially, the flavor of mustard was similar to that of magic potatoes.  If a tree falls in the forest, and nobody is there to hear it, does it make a noise?  Also, has anyone really been far even as decided to use even go want to do look more like?</p>
+
+       <p>Check out these demos below:</p>
+
+     </div>
+
+     <div class="demo_wrap">
+      <div class="tab_wrap">
+        <div class="tab" id="tab_1">Character Recognition</div>
+        <div class="tab" id="tab_2">Learn the Alphabet</div>
+        <div class="tab" id="tab_3">Draw the State</div>
+      </div>
+      <div class="clear"></div>
+      <div class="demo" id="demo_1">
+        <p>Can't remember the name of a character or symbol?  Draw it in the box below and we'll tell you what it is!</p>
+        <div>Draw here:</div>
+        <div id="sketchpad_editor_1" class="sketchpad"></div>
+        <div class="result_box">
+          <div>Result:&nbsp; &nbsp;<span id="res_text_1"></span></div>
+          <div>Similarity:&nbsp; &nbsp;<span id="result_1" class="match_result">99.8%</span></div>
+        </div>
+        <div class="clear"></div>
+        <div class="clear_button button" id="clear_button_1">Clear</div>
+
+        
+
+        <div class="clear"></div>
+      </div>
+
+      <div class="demo" id="demo_2">
+        <p>Sketchy.js can be used to teach people the alphabet</p>
+        <div id="demo_2_directions">Draw the letter: <b><span id="demo_2_text">Q</span></b></div>
+
+        <div class="new_letter_button button" id="new_letter_button_2">New Letter</div> 
+        <div id="sketchpad_editor_2" class="sketchpad"></div>
+        
+        <div class="clear"></div>
+        <div class="done_button button" id="done_button_2">Done</div>
+        <div class="clear_button button" id="clear_button_2">Clear</div>
+
+        <div class="clear"></div>
+        <div id="accuracy_2" class="accuracy_box">Accuracy:&nbsp; &nbsp;<span id="result_2" class="match_result"></span></div>
+
+
+      </div>
+
+      <div class="demo" id="demo_3">
+        Demo 3
+      </div>
+
+    </div>
+
+  </section>
+</div>
+
+<!-- FOOTER  -->
+<div id="footer_wrap" class="outer">
+  <footer class="inner">
+    <p class="copyright">Sketchy.js maintained by <a href="">ffff</a></p>
+    <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+  </footer>
+</div>
+
+
+
+</body>
+</html>
+

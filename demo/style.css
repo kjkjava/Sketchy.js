@@ -1,0 +1,39 @@
+/* Gotta look good. */
+
+body {
+	background: #ccc;
+	margin: 0;
+}
+h2 {
+	margin-top: 0;
+}
+#container {
+	margin: 20px auto;
+	padding: 30px;
+	width: 650px;
+	background-color: #fff;
+	border: 2px solid #000;
+	height: auto;
+	overflow: hidden;
+	min-width: 650px;
+}
+div.sketchcontainer{
+	float: left;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+div.sketchpad {
+	border: 1px solid #ccc;
+	background-color:#ffc;
+	background: url('paper.png');
+	width: 300px;
+	height: 300px;
+}
+textarea.databox {
+	border: 1px solid #ccc;
+	margin: 0;
+	width:300px;
+	height:300px;
+}
+
+/* Just gotta. */

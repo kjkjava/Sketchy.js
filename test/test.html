@@ -5,6 +5,9 @@
 		<title>Sketchy.js Test Cases</title>
 		<link rel="stylesheet" href="style.css">
 
+    	<script type="text/javascript" src="canvg.js"></script>
+		<script type="text/javascript" src="rgbcolor.js"></script>
+
 		<script src="json2.js"></script>
 		<!-- The // notation will not work well locally on the file:// protocol, so the local fallback will be used. -->
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -39,6 +42,18 @@
 					result = Sketchy.convertSVGtoPointArrays(sketchpad_editor_1.json());
 					console.log("convertSVGtoPointArrays result: ");
 					console.log(result);
+				});
+				$("#buttonConvertsvgJSPNtosvgXML").click(function() {
+					var context = document.getElementById('canvas').getContext; 
+					var result;
+					result = Sketchy.convertSVGtoXML(sketchpad_editor_1.json());
+					alert(result);
+					var c = document.getElementById('canvas');
+					c.width = 300;
+					c.height = 300;
+					if (context)
+						c.getContext = context;
+					canvg(c, result.toString());
 				});
 			});
 		</script>
@@ -78,6 +93,14 @@
 			<h3>convertSVGtoPointArrays(json)</h3>
 			<!-- See the jQuery action above -->
 			<p><input type="button" id="buttonConvertSVGtoPointArrays" value="Test on Sketch 1"></input></p>
+			
+			<h3>Convert svgJSON to svgXML</h3>
+			<p><input type="button" id="buttonConvertsvgJSPNtosvgXML" value="Test on Sketch 1"></input></p>
+
+			<h3>SVGtoImage</h3>
+			<div style="border: 1px solid gray; width: 300px; height: 300px;">
+			<canvas id="canvas" width="300px" height="300px"></canvas>
+			</div>
 		</div><!--#container-->
 	</body>
 </html>

@@ -44,7 +44,27 @@
     }
     return paths;
   };
-
+  // Takes in SVG data (from Raphael SketchPad) and outputs an svgXML file.
+  Sketchy.convertSVGtoXML = function(json)
+  {
+    var i, j, splitPath, point, svgXML;
+    svgXML = "<?xml version=\"1.0\" standalone=\"no\"?>\n<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n"; 
+    svgXML += "<svg width=\"100%\" height=\"100%\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\"> ";
+    json = JSON.parse(json);
+    for(i=0; i<json.length; i++) {
+      svgXML += "\n<path fill=\"none\" stroke-opacity=\"1\" stroke=\"#000000\" stroke-linecap=\"round\" stroke-width=\"5\" stroke-linejoin=\"round\" transform=\"[]\" type=\"path\" d=\"M ";
+      splitPath = json[i].path.slice(1).split("L");
+      for(j=0; j<splitPath.length; j++) {
+        point = splitPath[j].split(",");
+        svgXML += point[0]+" "+point[1]+" ";
+      }
+      svgXML += "\"/>";
+    }
+    svgXML += "\n</svg>";
+    alert(svgXML);
+    return svgXML;
+  };
+  
   Sketchy.shapeContextMatch = function(shape1, shape2) {
     return 0;
   };

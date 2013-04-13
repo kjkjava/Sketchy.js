@@ -44,16 +44,9 @@
 					console.log(result);
 				});
 				$("#buttonConvertsvgJSPNtosvgXML").click(function() {
-					var context = document.getElementById('canvas').getContext; 
-					var result;
-					result = Sketchy.convertSVGtoXML(sketchpad_editor_1.json());
+					var result = Sketchy.convertSVGtoXML(sketchpad_editor_1.json());
 					alert(result);
-					var c = document.getElementById('canvas');
-					c.width = 300;
-					c.height = 300;
-					if (context)
-						c.getContext = context;
-					canvg(c, result.toString());
+					canvg(document.getElementById('canvas'), result.toString());
 				});
 			});
 		</script>

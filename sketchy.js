@@ -102,24 +102,33 @@
   };
 
   /* Betim's Algorithms */
-  // Compute the directed hausdorff distance of shape1 and shape2.
+  // Compute the directed hausdorff distance of pixels1 and pixels2.
   // Calculate the lowest upper bound over all points in shape1
   // of the distances to shape2.
-  Sketchy.h = function(shape1, shape2) {
+  // TODO: Make it faster!
+  Sketchy.hausdorff = function(pixels1, pixels2, w, h) {
     var h_max = Number.MIN_VALUE, h_min;
-    var x1,y1,x2,y2;
-    for (y1 = 0; y1 < shape1.length; y1++) {
-      for (x1 = 0; x1 < shape1[y1].length; x1++) {
-        if (shape1[x1][y1] == 0)
+    var d1=pixels1.data, d2=pixels2.data;
+    var value1, value2, dis, x1, y1, x2, y2;
+    for (y1=0; y1<h; y1++) {
+      for (x1=0; x1<w; x1++) {
+        // check only alpha channel
+        value1 = d1[(x1+y1*w)*4+3];
+        if (value1==0) {
           continue;
+        }
         h_min = Number.MAX_VALUE;
-        for (y2 = 0; y2 < shape2.length; y2++) {
-          for (x2 = 0; x2 < shape2[y2].length; x2++) {
-            if (shape2[x2][y2] == 0)
+        for (y2=0; y2<h; y2++) {
+          for (x2=0; x2<w; x2++) {
+          // check only alpha channel
+            value2 = d2[(x2+y2*w)*4+3];
+            if (value2==0) {
               continue;
-            var euclDis = Sketchy.euclideanDistance(x1,y1,x2,y2);
-            if (euclDis < h_min)
-              h_min = euclDis;
+            }
+            dis = Sketchy.euclideanDistance(x1,y1,x2,y2);
+            if (dis < h_min) {
+             h_min = dis;
+            }
           }
         }
         if (h_min > h_max)
@@ -127,15 +136,23 @@
       }
     }
     return h_max;
-  };
-  // Compute hausdorff distance h(shape1, shape2) and h(shape2, shape1) and return
+  }
+ 
+  // Compute hausdorffDistance hausdorff(shape1, shape2) and hausdorff(shape2, shape1) and return
   // the maximum value.
   Sketchy.hausdorffDistance = function(shape1, shape2) {
-    var h0 = Sketchy.h(shape1, shape2);
-    var h1 = Sketchy.h(shape2, shape1);
-    return Math.max(h0, h1);
-  };
-  
+    var c1 = document.getElementById(shape1);
+    var c2 = document.getElementById(shape2);
+    var ctx1 = c1.getContext('2d');
+    var ctx2 = c2.getContext('2d');         
+    var idata1 = ctx1.getImageData(0,0,c1.width,c1.height);
+    var idata2 = ctx2.getImageData(0,0,c2.width,c2.height);
+    var h1 = Sketchy.hausdorff(idata1, idata2, c1.width, c1.height);
+    var h2 = Sketchy.hausdorff(idata2, idata1, c1.width, c1.height);
+    alert(Math.max(h1,h2));
+    return Math.max(h1,h2);
+  }; 
+
   // TODO: Opening and Closing Operation
   Sketchy.morphologyOperation = function(shape, frame_size, operation)
   {

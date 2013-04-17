@@ -129,50 +129,59 @@
     return distance;
   };
 
-  // Turn an array of points into another array representing the same
-  // shape, but with only n points, uniformly distributed along the path
-  // from the start point to the end point.  Path should be in
-  // array-of-points format.
-  Sketchy.distributePointsAcrossPath = function(path, numberOfPoints) {
-    var pathLength, delta, i, distanceCovered, distanceToNextPoint, angleToNextPoint,
-        nextPathIndex = 1,
-        currX = path[0].x,
-        currY = path[0].y,
-        result = [{x: currX, y: currY}]; // Manually add the first point
+  // TODO: The below function was written to perfectly distribute
+  // some number of points across a polyline, but there is a problem,
+  // due to an error on my part, a lack of precision, or perhaps both.
+  // In many cases, the results are close, but the last segment is visably
+  // longer than the others, as though the other points are under-
+  // calculated.  Also, in some more select cases, the points go off-screen,
+  // far away from anything accurate.  For now, it will be replaced
+  // with a more naive approach.
+  //
+  // // Turn an array of points into another array representing the same
+  // // shape, but with only n points, uniformly distributed along the path
+  // // from the start point to the end point.  Path should be in
+  // // array-of-points format.
+  // Sketchy.distributePointsAcrossPath = function(path, numberOfPoints) {
+  //   var pathLength, delta, i, distanceCovered, distanceToNextPoint, angleToNextPoint,
+  //       nextPathIndex = 1,
+  //       currX = path[0].x,
+  //       currY = path[0].y,
+  //       result = [{x: currX, y: currY}]; // Manually add the first point
 
-    pathLength = Sketchy.computeLength(path, Sketchy.euclideanDistance);
-    delta = pathLength/numberOfPoints;
+  //   pathLength = Sketchy.computeLength(path, Sketchy.euclideanDistance);
+  //   delta = pathLength/numberOfPoints;
 
-    for(i=1; i<(numberOfPoints-1); i++) {
-      distanceCovered = 0;
-      do {
-        distanceToNextPoint = Sketchy.euclideanDistance(currX, currY,
-                                path[nextPathIndex].x, path[nextPathIndex].y);
+  //   for(i=1; i<(numberOfPoints-1); i++) {
+  //     distanceCovered = 0;
+  //     do {
+  //       distanceToNextPoint = Sketchy.euclideanDistance(currX, currY,
+  //                               path[nextPathIndex].x, path[nextPathIndex].y);
 
-        // Determine whether to jump to the next point or only move partially
-        // Last move will occur in >= case (yes, it could happen in if or else)
-        if(distanceToNextPoint <= delta-distanceCovered) {
-          // Simply move to the next point
-          currX = path[nextPathIndex].x;
-          currY = path[nextPathIndex].y;
-          nextPathIndex++;
-          distanceCovered += distanceToNextPoint;
-        } else {
-          // Move partially
-          angleToNextPoint = Math.atan2(path[nextPathIndex].y - currY,
-                                        path[nextPathIndex].x - currX);
-          currX = currX + Math.cos(angleToNextPoint) * (delta-distanceCovered);
-          currY = currY - Math.sin(angleToNextPoint) * (delta-distanceCovered);
-          distanceCovered = delta;
-        }
-      } while(distanceCovered < delta);
-      // TODO: discretize currX and currY before pushing
-      result.push({x: currX, y: currY});
-    }
-    // Manually add on the last point
-    result.push(path[path.length-1]);
-    return result;
-  }
+  //       // Determine whether to jump to the next point or only move partially
+  //       // Last move will occur in >= case (yes, it could happen in if or else)
+  //       if(distanceToNextPoint <= delta-distanceCovered) {
+  //         // Simply move to the next point
+  //         currX = path[nextPathIndex].x;
+  //         currY = path[nextPathIndex].y;
+  //         nextPathIndex++;
+  //         distanceCovered += distanceToNextPoint;
+  //       } else {
+  //         // Move partially
+  //         angleToNextPoint = Math.atan2(path[nextPathIndex].y - currY,
+  //                                       path[nextPathIndex].x - currX);
+  //         currX = currX + Math.cos(angleToNextPoint) * (delta-distanceCovered);
+  //         currY = currY - Math.sin(angleToNextPoint) * (delta-distanceCovered);
+  //         distanceCovered = delta;
+  //       }
+  //     } while(distanceCovered < delta);
+  //     // TODO: discretize currX and currY before pushing
+  //     result.push({x: currX, y: currY});
+  //   }
+  //   // Manually add on the last point
+  //   result.push(path[path.length-1]);
+  //   return result;
+  // }
 
   /* Betim's Algorithms */
   // Compute the directed hausdorff distance of pixels1 and pixels2.

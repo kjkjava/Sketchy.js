@@ -44,6 +44,34 @@
     }
     return paths;
   };
+  // Takes in an array of paths, each of which is an array of points in
+  // {x: Number, y: Number} format, and outputs it in Raphael SketchPad-stlye
+  // JSON/SVG data.  Essentially reverses the above and makes the same drawing
+  // decisions as Raphael SketchPad (e.g. black, stroke-width of 5).
+  Sketchy.convertPointArraysToSVG = function(paths) {
+    var json = [],
+        i,j;
+    for(i=0; i<paths.length; i++) {
+      json[i] = {
+        "fill":"none",
+        "stroke":"#000000",
+        "path":"M",
+        "stroke-opacity":1,
+        "stroke-width":5,
+        "stroke-linecap":"round",
+        "stroke-linejoin":"round",
+        "transform":[],
+        "type":"path"
+      };
+      json[i].path += paths[i][0].x + "," + paths[i][0].y;
+      for(j=1; j<paths[i].length; j++) {
+        json[i].path += "L" + paths[i][j].x + "," + paths[i][j].y;
+      }
+    }
+    return JSON.stringify(json); // TODO: better distinguish between JSON strings and objects
+  };
+
+
   // Takes in SVG data (from Raphael SketchPad) and outputs an svgXML file.
   Sketchy.convertSVGtoXML = function(json)
   {

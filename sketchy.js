@@ -39,7 +39,7 @@
       paths[i] = [];
       for(j=0; j<splitPath.length; j++) {
         point = splitPath[j].split(",");
-        paths[i][j] = {x: point[0], y: point[1]};
+        paths[i][j] = {x: parseInt(point[0]), y: parseInt(point[1])};
       }
     }
     return paths;
@@ -143,7 +143,7 @@
     pathLength = Sketchy.computeLength(path, Sketchy.euclideanDistance);
     delta = pathLength/numberOfPoints;
 
-    for(i=0; i<numberOfPoints; i++) {
+    for(i=1; i<(numberOfPoints-1); i++) {
       distanceCovered = 0;
       do {
         distanceToNextPoint = Sketchy.euclideanDistance(currX, currY,

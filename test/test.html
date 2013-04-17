@@ -38,7 +38,7 @@
 											});
 				// Test Functions
 				$("#buttonConvertSVGtoPointArrays").click(function() {
-					var result, i;
+					var result;
 					result = Sketchy.convertSVGtoPointArrays(sketchpad_editor_1.json());
 					console.log("convertSVGtoPointArrays result: ");
 					console.log(result);
@@ -47,6 +47,15 @@
 					var result = Sketchy.convertSVGtoXML(sketchpad_editor_1.json());
 					alert(result);
 					canvg(document.getElementById('canvas'), result.toString());
+				});
+				$("#buttonDistributePointsAcrossPath").click(function() {
+					var paths, i, json;
+					paths = Sketchy.convertSVGtoPointArrays(sketchpad_editor_1.json());
+					for(i=0; i<paths.length; i++) {
+						paths[i] = Sketchy.distributePointsAcrossPath(paths[i], 25);
+					}
+					json = Sketchy.convertPointArraysToSVG(paths);
+					sketchpad_editor_2.json(json);
 				});
 			});
 		</script>
@@ -94,6 +103,9 @@
 			<div style="border: 1px solid gray; width: 300px; height: 300px;">
 			<canvas id="canvas" width="300px" height="300px"></canvas>
 			</div>
+
+			<h3>distributePointsAcrossPath</h3>
+			<p><input type="button" id="buttonDistributePointsAcrossPath" value="Sketch 1 --process--> Sketch 2"></input></p>
 		</div><!--#container-->
 	</body>
 </html>

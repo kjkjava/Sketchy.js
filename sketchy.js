@@ -129,6 +129,34 @@
     return distance;
   };
 
+  Sketchy.distributePointsAcrossPath = function(path, numberOfPoints) {
+    var result, pathIndexDelta, i,
+        currPathIndex=0;
+
+    if(numberOfPoints <= 0) {
+      return [];
+    }
+    if(numberOfPoints == 1) {
+      // TODO: Is this creating a copy of the original point, or its reference?
+      //       Check for this concern elsewhere.
+      return [path[Math.floor((path.length-1)/2)]];
+    }
+
+    pathIndexDelta = path.length/(numberOfPoints-1);
+
+    // If numberOfPoints >= 2, we will manually add the first and last points
+    // Add the first
+    result = [path[0]];
+
+    for(i=1; i<numberOfPoints-1; i++) {
+      currPathIndex += pathIndexDelta;
+      result.push(path[Math.round(currPathIndex)]);
+    }
+
+    // Add the last
+    result.push(path[path.length-1]);
+  };
+
   // TODO: The below function was written to perfectly distribute
   // some number of points across a polyline, but there is a problem,
   // due to an error on my part, a lack of precision, or perhaps both.
@@ -181,7 +209,7 @@
   //   // Manually add on the last point
   //   result.push(path[path.length-1]);
   //   return result;
-  // }
+  // };
 
   /* Betim's Algorithms */
   // Compute the directed hausdorff distance of pixels1 and pixels2.

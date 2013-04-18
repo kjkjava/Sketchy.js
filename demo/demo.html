@@ -29,7 +29,7 @@
         ///////////////////
 
         //set the first demo to be displayed
-        demoNum = "2"  //change this back to 1 when done
+        demoNum = "3"  //change this back to 1 when done
 
         //display the first demo by default
         $('#demo_' + demoNum).show();
@@ -60,6 +60,9 @@
 
         //set up the second demo
         initDemo2();
+
+        //set up the third demo
+        initDemo3();
 
 
       });
@@ -169,7 +172,162 @@
 
           });
 
-      }
+      }//end initDemo2
+
+
+      /////////////////////
+      // Demo 3 - draw the letter
+      /////////////////////
+      function initDemo3(){
+          //initialize editor 3
+          var demo_3_sketchpad_editor_obj= Raphael.sketchpad("demo_3_sketchpad", {
+              width: 150,
+              height: 150,
+              editing: true // default
+          });
+
+          function newLetter(){
+            items = ["a", "b", "c", "d", "e", 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+            var item = items[Math.floor(Math.random()*items.length)];
+            toUp = (Math.floor(Math.random() *2)%2==0)?true:false;
+            if(toUp==true)
+              item= item.toUpperCase()
+            return item
+          }
+
+          function newEquation(){
+            //get random operator
+            ops = ["+", "-", "×", "÷"] //could add * and /
+            op = ops[Math.floor(Math.random()*ops.length)];
+
+            //get two random operands
+            opers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+            oper1 = opers[Math.floor(Math.random()*opers.length)];
+            oper2 = opers[Math.floor(Math.random()*opers.length)];
+
+            //pick which element to solve for (0-3)
+            solve = Math.floor(Math.random()*4);
+
+            var res;
+            //solve the equation
+            if (op == "+"){
+              res = oper1 + oper2;
+            } else if (op == "-"){
+            } else if (op == "×"){
+              res = oper1 * oper2;
+            } else if(op == "÷"){
+              res = oper1/oper2;
+            }
+
+            //make a neat little object to return
+            eq = new Object();
+            eq.op = op;
+            eq.oper1 = oper1;
+            eq.oper2 = oper2;
+            eq.res = res;
+            eq.solve = solve;
+            console.log("eq: " + oper1 + " " + op + " " + oper2 + " = " + res + ", solve for: " + solve)
+
+            while (validateEq(eq) == false){
+              eq = newEquation();
+            }
+
+            return eq;
+          }
+
+          //decide what we want to allow in our equation
+          function validateEq(eq){
+            op = eq.op;
+            oper1 = eq.oper1;
+            oper2 = eq.oper2;
+            res = eq.res;
+
+            //only single digit numbers
+            if (oper1>9 || oper2>9 || res>9 || oper1<0 || oper2<0 || res<0){
+              return false;
+            }
+
+            //eliminate decimals
+            if( !(res==0 || res==1 || res==2 || res==3 || res==4 || res==5 || res==6 || res==7 || res==8 || res==9) ){
+              return false;
+            }
+
+            //0 / x = 0 (this is just silly)
+            if (op == "÷" && oper1==0){
+              return false;
+            }
+
+            //make sure we can definitively solve it
+            //0 * x = 0 (can't solve for x)
+            //x * 0 = 0 (can't solve for x)
+            if (op == "×" && ((oper1==0 && solve==2) || (oper2==0 && solve==0)) ){
+              return false;
+            }
+
+
+            //check for an ambiguous operation
+            // 2 __ 2  = 4  //is it + or is it *?
+            // if 2+2==2*2 or 2+2==2/2 .... etc
+            if(solve==1 && (oper1+oper2==oper1-oper2 || oper1+oper2==oper1*oper2 || oper1+oper2==oper1/oper2 || oper1-oper2==oper1*oper2 || oper1-oper2==oper1/oper2 || oper1*oper2==oper1/oper2) ){
+              return false;
+            }
+
+            return true;
+          }
+
+          function setEquation(eq){
+            op = eq.op;
+            oper1 = eq.oper1;
+            oper2 = eq.oper2;
+            res = eq.res;
+            solve = eq.solve;
+
+            //<div id="demo_3_eq"><span id="demo_3_operand_1">1</span><span id="demo_3_operator">+</span><span id="demo_3_operand_2">2</span><span>=</span><span id="demo_3_result">3</span></div>
+            $('#demo_3_operand_1').text(oper1);
+            $('#demo_3_operand_2').text(oper2);
+            $('#demo_3_operator').text(op);
+            $('#demo_3_result').text(res);
+
+
+            if (solve == 0 ){
+              $('#demo_3_operand_1').text("_");
+              //$("#demo_3_sketchpad").appendTo('#demo_3_operand_1');
+            } else if(solve == 1){
+              $('#demo_3_operator').text("_");
+              //$("#demo_3_sketchpad").appendTo('#demo_3_operator');
+            } else if(solve == 2){
+              $('#demo_3_operand_2').text("_");
+              //$("#demo_3_sketchpad").appendTo('#demo_3_operand_2');
+            } else if(solve == 3){
+              $('#demo_3_result').text("_");
+              //$("#demo_3_sketchpad").appendTo('#demo_3_result');
+            }
+
+          }
+
+
+          demo_3_sketchpad_editor_obj.change(function() {
+              jsontext = demo_3_sketchpad_editor_obj.json();
+            });
+
+          //set up buttons
+          $('#demo_3_clear_button').click(function(){
+            demo_3_sketchpad_editor_obj.clear();
+          });
+          $('#demo_3_new_button').click(function(){             
+            //alert("foo")
+            demo_3_sketchpad_editor_obj.clear();
+
+            setEquation(newEquation());
+
+          });
+          $("#demo_3_done_button").click(function(){
+            
+            demo_3_sketchpad_editor_obj.clear();
+
+          });
+
+      }//end initDemo2
 </script>
 <title>Sketchy.js</title>
 </head>
@@ -251,8 +409,20 @@
 
       <div class="demo" id="demo_3">
         <p>Use Sketchy.js to help teach future nerds how to do math stuffs</p>
+        <p>Complete the equation:</p>
+        <div id="demo_3_eq"><div id="demo_3_operand_1">1</div><div id="demo_3_operator">+</div><div id="demo_3_operand_2">2</div><div>=</div><div id="demo_3_result">_</div></div>
 
+        <div class="clear"></div>
+        <div id="demo_3_sketchpad" class="sketchpad"></div>
 
+        
+        <div class="button_wrap" id="demo_3_button_wrap">
+          <div class="new_eq_button button" id="demo_3_new_button">New Equation</div> 
+          <div class="done_button button" id="demo_3_done_button">Done</div>
+          <div class="clear_button button" id="demo_3_clear_button">Clear</div>
+        </div>
+
+        <div class="clear"></div>
       </div>
 
       <div class="demo" id="demo_4">

@@ -8,11 +8,11 @@
   <meta http-equiv="X-UA-Compatible" content="chrome=1" />
   <meta name="description" content="Sketchy.js: " />
 
-  <link rel="stylesheet" type="text/css" media="screen" href="stylesheet.css">
-  <link rel="stylesheet" type="text/css" media="screen" href="styles.css">
+  <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+  <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/styles.css">
   <script src="json2.js"></script>
   <!-- The // notation will not work well locally on the file:// protocol, so the local fallback will be used. -->
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+ <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>-->
   <script>window.jQuery || document.write('<script src="jquery-1.9.1.min.js"><\/script>')</script>
 		<!-- jQuery Migrate must be used... see my bug report:
     https://github.com/ianli/raphael-sketchpad/issues/15 -->
@@ -44,7 +44,13 @@
           $(this).addClass("tab_active");
           
           //update demo containers
-          $(".demo").slideUp(); //these animations are tentative, maybe flash white, then fade in the new content ... idk
+          //$(".demo").slideUp(); //these animations are tentative, maybe flash white, then fade in the new content ... idk
+         // alert(id + "\n" + $(this).attr('id'))
+          $(".demo").each(function(){
+            if(id.split("_")[1] != $(this).attr('id').split("_")[1])
+              $(this).hide();
+          });
+         // $('#demo_' + demoNum).offset().left - $(this).offset().left + $(this).width()
           $(id).slideDown();
         });
 
@@ -59,7 +65,7 @@
       });
 
       /////////////////////
-      // Demo 1
+      // Demo 1  - Character recognition
       /////////////////////
       function initDemo1(){
           //initialize editor 1
@@ -98,7 +104,7 @@
       }//end initDemo1
 
       /////////////////////
-      // Demo 2
+      // Demo 2 - draw the letter
       /////////////////////
       function initDemo2(){
           //initialize editor 2
@@ -206,7 +212,8 @@
       <div class="tab_wrap">
         <div class="tab" id="tab_1">Character Recognition</div>
         <div class="tab" id="tab_2">Learn the Alphabet</div>
-        <div class="tab" id="tab_3">Draw the State</div>
+        <div class="tab" id="tab_3">Solve the Equation</div>
+        <div class="tab" id="tab_4">Compare Two Sketches</div>
       </div>
       <div class="clear"></div>
       <div class="demo" id="demo_1">
@@ -243,7 +250,15 @@
       </div>
 
       <div class="demo" id="demo_3">
-        Demo 3
+        <p>Use Sketchy.js to help teach future nerds how to do math stuffs</p>
+
+
+      </div>
+
+      <div class="demo" id="demo_4">
+        <p>This is a simple example to compare two sketches</p>
+
+
       </div>
 
     </div>

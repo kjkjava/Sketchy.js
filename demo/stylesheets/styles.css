@@ -3,21 +3,45 @@
  **************/
 .tab{
 	border: 1px solid black;
-	/*border-bottom: 2px solid white;*/
+	/*border-bottom: 1px solid white;*/
 	float: left;
 	margin: 0px 5px;
 	margin-bottom: -1px;
 	padding: 10px;
-	background-color: #ddd;
+	height: 20px;
+	
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+
+	box-shadow: inset 0px -4px 9px -6px; 
+background-color:rgb(190, 206, 218);
+
+
+background: #beced7; /* Old browsers */
+background: -moz-linear-gradient(top,  #beced7 1%, #77a7d1 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(1%,#beced7), color-stop(100%,#77a7d1)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  #beced7 1%,#77a7d1 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  #beced7 1%,#77a7d1 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  #beced7 1%,#77a7d1 100%); /* IE10+ */
+background: linear-gradient(to bottom,  #beced7 1%,#77a7d1 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#beced7', endColorstr='#77a7d1',GradientType=0 ); /* IE6-9 */
+
 }
 
+
+
 .tab_active{
+	background: none;
 	background-color: #fff;
 	border-bottom: 1px solid white;
+	box-shadow: none;
+	font-weight: bold;
 }
 .tab:hover{cursor: pointer;}
 
 .tab_wrap{
+	padding-left: 10px;
+	z-index: 100;
 
 }
 
@@ -32,13 +56,17 @@
 	background-color: #fff;
 	margin: 0px;
 	padding: 10px;
-
+	border-radius: 10px;
+	z-index: -1;
+	box-shadow: 10px 10px 25px #888888;
 }
 .demo_wrap{
 	height: 600px;
 	width: 900px;
 	max-width: 900px;
 	margin: 0 auto;
+	z-index: -1;
+
 }
 
 

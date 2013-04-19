@@ -155,6 +155,8 @@
 
     // Add the last
     result.push(path[path.length-1]);
+
+    return result;
   };
 
   // TODO: The below function was written to perfectly distribute

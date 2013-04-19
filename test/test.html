@@ -52,7 +52,7 @@
 					var paths, i, json;
 					paths = Sketchy.convertSVGtoPointArrays(sketchpad_editor_1.json());
 					for(i=0; i<paths.length; i++) {
-						paths[i] = Sketchy.distributePointsAcrossPath(paths[i], 25);
+						paths[i] = Sketchy.distributePointsAcrossPath(paths[i], 5);
 					}
 					json = Sketchy.convertPointArraysToSVG(paths);
 					sketchpad_editor_2.json(json);

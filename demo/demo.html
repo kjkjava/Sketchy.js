@@ -19,6 +19,7 @@
     <script src="jquery-migrate-1.1.1.min.js"></script>
     <script src="raphael-min.js"></script>
     <script src="raphael.sketchpad.js"></script>
+    <script src="dataset.js"></script>
 
     <script type="text/javascript">
 			$(document).ready(function() { // FYI, "$(function(){" is an alias to this line
@@ -64,6 +65,8 @@
         //set up the third demo
         initDemo3();
 
+        //set up the fourth demo
+        initDemo4();
 
       });
 
@@ -72,14 +75,15 @@
       /////////////////////
       function initDemo1(){
           //initialize editor 1
-          var sketchpad_editor_obj_1= Raphael.sketchpad("sketchpad_editor_1", {
+          var sketchpad_editor_obj_1= Raphael.sketchpad("demo_1_sketchpad_editor", {
               width: 200,
               height: 200,
               editing: true // default
           });
 
-          var results = ["", "&alpha;", "&beta;", "&gamma;", "&delta;", "&epsilon;", "&zeta;", "&eta;", "&theta;", "&iota;", "&kappa;", 
+          /*var results = ["", "&alpha;", "&beta;", "&gamma;", "&delta;", "&epsilon;", "&zeta;", "&eta;", "&theta;", "&iota;", "&kappa;", 
                         "&lambda;", "&mu;",    "&nu;",   "&xi;",      "&pi;",    "&rho;", "&sigma;", "&tau;",   "&upsilon;", "&omega;"];
+          */
 
           sketchpad_editor_obj_1.change(function() {
                 //generate a random percent based on the json data
@@ -89,18 +93,84 @@
                 percentStr = percent +"%"
 
                 //get a random character
-                randInd = Math.floor(Math.random() * (results.length - 1 + 1)) + 1;
+                randInd = Math.floor(Math.random() * (ALL_LETTERS_KEYS.length - 1 + 1)) + 1;
+
                 //console.log(jsontext)
                 if (jsontext == "[]"){
                   percentStr = ""
                   randInd = 0
                 }
+
+                //update the fields
+                $("#demo_1_result_1").text(percentStr);
+                $("#demo_1_res_text_1").html(ALL_LETTERS_KEYS[randInd]);
+
+
+                //just copy/pasted the above code to apply to the second best match
+                //generate a random percent based on the json data
+                jsontext = sketchpad_editor_obj_1.json();
+                rand = Math.random(jsontext);
+                percent = Math.round(rand*10000)/100
+                percentStr = percent +"%"
+
+                //get a random character
+                randInd = Math.floor(Math.random() * (ALL_LETTERS_KEYS.length - 1 + 1)) + 1;
+
+                //console.log(jsontext)
+                if (jsontext == "[]"){
+                  percentStr = ""
+                  randInd = 0
+                }
+
+                //update the fields
+                $("#demo_1_result_2").text(percentStr);
+                $("#demo_1_res_text_2").html(ALL_LETTERS_KEYS[randInd]);
+
+
+
+                best_match = 0
+                best_shape = ""
+                best_index = -1
+
+                second_match = 0
+                second_shape = ""
+                second_index = -1
+
+                //now let's do it again ... with style
+                /*
+                for (i=0; i<ALL_LETTERS_KEYS.length; i++){
+                  matchPerc = compareShape(jsontext, ALL_LETTERS[i]);
+                  if (matchPerc > best_match){
+                    second_match = best_match
+                    second_shape = best_shape
+                    second_index = best_index
+
+                    best_match = matchPerc
+                    best_shape = ALL_LETTERS[i]
+                    best_index = i
+                  } else if (matchPerc > second_match){
+                    second_match = matchPerc
+                    second_shape = ALL_LETTERS[i]
+                    second_index = i
+                  }
+                }
+
+                percent = matchPerc
+                percentStr = percent + "%"
+
+                //update the fields
                 $("#result_1").text(percentStr);
-                $("#res_text_1").html(results[randInd]);
+                $("#res_text_1").html(ALL_LETTERS_KEYS[best_index]);
+                */
+                
               });
 
           //set up buttons
-          $('#clear_button_1').click(function(){sketchpad_editor_obj_1.clear()});
+          $('#demo_1_clear_button').click(function(){
+            sketchpad_editor_obj_1.clear()
+            $("#demo_1_res_text_1").html("");
+            $("#demo_1_res_text_2").html("");
+          });
 
  
 
@@ -111,43 +181,60 @@
       /////////////////////
       function initDemo2(){
           //initialize editor 2
-          var sketchpad_editor_obj_2= Raphael.sketchpad("sketchpad_editor_2", {
+          var sketchpad_editor_obj_2= Raphael.sketchpad("demo_2_sketchpad_editor", {
               width: 200,
               height: 200,
               editing: true // default
           });
 
+          var demo_2_letter = "Q";
+          var demo_2_letter_shape = '';
+
           function newLetter(){
+            //make the list of letters
             items = ["a", "b", "c", "d", "e", 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
             var item = items[Math.floor(Math.random()*items.length)];
+            //randomly determine if we want an uppercase or lowercase letter
             toUp = (Math.floor(Math.random() *2)%2==0)?true:false;
-            if(toUp==true)
+            //change it to uppercase if we need to, and store it
+            if(toUp==true){
               item= item.toUpperCase()
+              demo_2_letter = item
+              demo_2_letter_shape = UPPERCASE_LETTERS[UPPERCASE_KEYS.indexOf(item)]
+            } else {
+              demo_2_letter = item
+              demo_2_letter_shape = LOWERCASE_LETTERS[LOWERCASE_KEYS.indexOf(item)]
+            }
+            //return the string version of the letter
             return item
           }
 
+          //set up the sketchpade for changes
           sketchpad_editor_obj_2.change(function() {
                 //generate a random percent based on the json data
                 jsontext = sketchpad_editor_obj_2.json();
                 rand = Math.random(jsontext);
                 percent = Math.round(rand*10000)/100
+
+                //eventually the call will be something like:
+                //percent = sketchy.compareShape(jsontext, someLetter)
                 percentStr = percent +"%"
 
-                //get a random character
-                //randInd = Math.floor(Math.random() * (results.length - 1 + 1)) + 1;
-                //console.log(jsontext)
+                //check for empty sketchpad
                 if (jsontext == "[]"){
                   percentStr = ""
                   //randInd = 0
                 }
-                $("#result_2").text(percentStr);
+
+                //display updated result
+                $("#demo_2_result").text(percentStr);
 
                 if(percent > 70){
-                  $("#accuracy_2").css("background-color", "#75FF75");
+                  $("#demo_2_accuracy").css("background-color", "#75FF75");
                 } else if (percent > 40){
-                  $("#accuracy_2").css("background-color", "#FFAD5C");
+                  $("#demo_2_accuracy").css("background-color", "#FFAD5C");
                 } else {
-                  $("#accuracy_2").css("background-color", "#FF3333");
+                  $("#demo_2_accuracy").css("background-color", "#FF3333");
 
                 }
 
@@ -155,20 +242,20 @@
               });
 
           //set up buttons
-          $('#clear_button_2').click(function(){
+          $('#demo_2_clear_button').click(function(){
             sketchpad_editor_obj_2.clear();
-            $("#accuracy_2").css("background-color", "#ffffff");
+            $("#demo_2_accuracy").css("background-color", "#ffffff");
           });
-          $('#new_letter_button_2').click(function(){             
+          $('#demo_2_new_letter_button').click(function(){             
             $("#demo_2_text").html(newLetter());
             sketchpad_editor_obj_2.clear();
-            $("#accuracy_2").css("background-color", "#ffffff");
+            $("#demo_2_accuracy").css("background-color", "#ffffff");
 
           });
-          $("#done_button_2").click(function(){
+          $("#demo_2_done_button").click(function(){
             $("#demo_2_text").html(newLetter());
             sketchpad_editor_obj_2.clear();
-            $("#accuracy_2").css("background-color", "#ffffff");
+            $("#demo_2_accuracy").css("background-color", "#ffffff");
 
           });
 
@@ -176,7 +263,7 @@
 
 
       /////////////////////
-      // Demo 3 - draw the letter
+      // Demo 3 - solve maths
       /////////////////////
       function initDemo3(){
           //initialize editor 3
@@ -186,15 +273,21 @@
               editing: true // default
           });
 
-          function newLetter(){
-            items = ["a", "b", "c", "d", "e", 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
-            var item = items[Math.floor(Math.random()*items.length)];
-            toUp = (Math.floor(Math.random() *2)%2==0)?true:false;
-            if(toUp==true)
-              item= item.toUpperCase()
-            return item
-          }
+          //get a new eq right away
+          setEquation(newEquation());
 
+          //start answer out as hidden
+          $('#demo_3_answer').hide();
+
+          //set some threshold to determine whether they drew the right number
+          var accuracy_threshold = 50; //50%
+
+          //store the active equation somewhere
+          var demo_3_eq = ''
+
+
+          //generate a new, random equation
+          //this method recursively calls itself until we get a valid one
           function newEquation(){
             //get random operator
             ops = ["+", "-", "×", "÷"] //could add * and /
@@ -228,14 +321,17 @@
             eq.solve = solve;
             console.log("eq: " + oper1 + " " + op + " " + oper2 + " = " + res + ", solve for: " + solve)
 
+            //keep generating equations until we have one that's allowed
             while (validateEq(eq) == false){
               eq = newEquation();
+              demo_3_eq = eq;
             }
 
             return eq;
           }
 
           //decide what we want to allow in our equation
+          //ex: negative numbers? 2 digit numbers? 
           function validateEq(eq){
             op = eq.op;
             oper1 = eq.oper1;
@@ -272,9 +368,12 @@
               return false;
             }
 
+
+            //move along, nothing to see here
             return true;
           }
 
+          //applies the equation object to the 4 related divs
           function setEquation(eq){
             op = eq.op;
             oper1 = eq.oper1;
@@ -282,13 +381,14 @@
             res = eq.res;
             solve = eq.solve;
 
-            //<div id="demo_3_eq"><span id="demo_3_operand_1">1</span><span id="demo_3_operator">+</span><span id="demo_3_operand_2">2</span><span>=</span><span id="demo_3_result">3</span></div>
+            //put the text where it belongs
             $('#demo_3_operand_1').text(oper1);
             $('#demo_3_operand_2').text(oper2);
             $('#demo_3_operator').text(op);
             $('#demo_3_result').text(res);
 
 
+            //hide the proper operand/operator
             if (solve == 0 ){
               $('#demo_3_operand_1').text("_");
               //$("#demo_3_sketchpad").appendTo('#demo_3_operand_1');
@@ -305,29 +405,177 @@
 
           }
 
+          //compare the drawing in the box to the actual answer
+          function checkAnswer(){
+            //compare their drawing to every number
+            jsontext = demo_3_sketchpad_editor_obj.json();
 
+            //figure out which part we care about
+            solve = demo_3_eq.solve
+
+            //get the right shape from the dataset
+            var some_number_shape = '';
+            matchStr = ""
+            if (solve == 0 ){
+              some_number_shape = NUMBERS[NUMBERS_KEYS.indexOf(demo_3_eq.oper1)];
+              matchStr = demo_3_eq.oper1
+            } else if(solve == 1){
+
+              some_number_shape = OPERATIONS[OPERATIONS_KEYS.indexOf(demo_3_eq.op)];
+              matchStr = demo_3_eq.op             
+            } else if(solve == 2){
+              some_number_shape = NUMBERS[NUMBERS_KEYS.indexOf(demo_3_eq.oper2)];
+              matchStr = demo_3_eq.oper2 
+            } else if(solve == 3){
+              some_number_shape = NUMBERS[NUMBERS_KEYS.indexOf(demo_3_eq.res)];
+              matchStr = demo_3_eq.res
+            }
+
+
+            //get a random percent
+            rand = Math.random(jsontext);
+            percent = Math.round(rand*10000)/100
+
+            //eventually ... compare them
+            //percent = compareShape(jsontext, some_number_shape)
+
+            console.log("The answer had the following accuracy: " + percent + "\tTrying to match to: " + matchStr)
+            if(percent > accuracy_threshold){
+              setAnswer(true);
+            } else {
+              setAnswer(false);
+            }
+          }
+
+          //used to set the "answer" box
+          //input is either true or false
+          function setAnswer(res){
+            if (res == true){
+              //eq has been correctly solved
+              $("#demo_3_answer").css("background-color", "#75FF75");
+              $("#demo_3_answer").text("Correct!");
+              $("#demo_3_answer").slideDown('slow');
+
+            } else {
+              //eq has been incorrectly answered
+              $("#demo_3_answer").css("background-color", "#FF3333");
+              $("#demo_3_answer").text("Incorrect.");
+              $("#demo_3_answer").slideDown('slow');
+
+            }
+          }
+
+          //just clear the answer box thing
+          function clearAnswer(){
+              $("#demo_3_answer").slideUp();
+              $("#demo_3_answer").css("background-color", "#FFFFFF");
+              $("#demo_3_answer").text("");
+          }
+
+          //handle changes to the drawing
           demo_3_sketchpad_editor_obj.change(function() {
               jsontext = demo_3_sketchpad_editor_obj.json();
+
+              //compare their drawing to every number
+
+              //if we find a number that matches, above the threshold
+              //set the answer
             });
 
           //set up buttons
           $('#demo_3_clear_button').click(function(){
             demo_3_sketchpad_editor_obj.clear();
+            clearAnswer();
           });
           $('#demo_3_new_button').click(function(){             
-            //alert("foo")
             demo_3_sketchpad_editor_obj.clear();
-
+            clearAnswer();
             setEquation(newEquation());
 
           });
           $("#demo_3_done_button").click(function(){
-            
-            demo_3_sketchpad_editor_obj.clear();
+            checkAnswer();
+            //setAnswer(true);
+            //demo_3_sketchpad_editor_obj.clear();
 
           });
 
-      }//end initDemo2
+      }//end initDemo3
+
+
+      /////////////////////
+      // Demo 4 - compare two sketches
+      /////////////////////
+      function initDemo4(){
+          //initialize editor 3
+          var demo_4_sketchpad_editor_obj_1= Raphael.sketchpad("demo_4_sketchpad_1", {
+              width: 200,
+              height: 200,
+              editing: true // default
+          });
+
+          var demo_4_sketchpad_editor_obj_2= Raphael.sketchpad("demo_4_sketchpad_2", {
+              width: 200,
+              height: 200,
+              editing: true // default
+          });
+
+          var demo_4_json_1 = ""
+          var demo_4_json_2 = ""
+
+          //method to actually do the comparison and update the result box thing
+          function updateSimilarity(){
+                //get a random number using the json text as a seed
+                rand = Math.random(demo_4_json_1+demo_4_json_2);
+                percent = Math.round(rand*10000)/100
+
+                //eventually, this is all we'll need
+                //percent = sketchy.compareShape(demo_4_json_1, demo_4_json_2);
+                percentStr = percent +"%"
+
+                //check for empty sketchpads
+                if (demo_4_json_1 == "[]" || demo_4_json_2 == "[]" ){
+                  percentStr = ""
+                }
+                $("#demo_4_results_text").text(percentStr);
+                //$("#res_text_1").html(results[randInd]);
+
+                if(percent > 70){
+                  $("#demo_4_results").css("background-color", "#75FF75");
+                } else if (percent > 40){
+                  $("#demo_4_results").css("background-color", "#FFAD5C");
+                } else {
+                  $("#demo_4_results").css("background-color", "#FF3333");
+
+                }
+        }//end updateSimilarity
+
+        //set up the sketchpads to handle change
+        demo_4_sketchpad_editor_obj_1.change(function() {
+                //generate a random percent based on the json data
+                demo_4_json_1 = demo_4_sketchpad_editor_obj_1.json();
+                updateSimilarity();
+
+          });
+
+        //nobody REALLY likes change
+        demo_4_sketchpad_editor_obj_2.change(function() {
+                //generate a random percent based on the json data
+                demo_4_json_2 = demo_4_sketchpad_editor_obj_2.json();
+                updateSimilarity();
+
+          });
+
+        //initialize button
+        $("#demo_4_clear_button").click(function(){
+          demo_4_sketchpad_editor_obj_1.clear();
+          demo_4_sketchpad_editor_obj_2.clear();
+          $("#demo_4_results").css("background-color", "#ffffff");
+
+        });
+
+
+      }//end initDemo4
 </script>
 <title>Sketchy.js</title>
 </head>
@@ -368,22 +616,27 @@
 
      <div class="demo_wrap">
       <div class="tab_wrap">
-        <div class="tab" id="tab_1">Character Recognition</div>
+
+        <div class="tab" id="tab_4">Compare Two Sketches</div>
         <div class="tab" id="tab_2">Learn the Alphabet</div>
         <div class="tab" id="tab_3">Solve the Equation</div>
-        <div class="tab" id="tab_4">Compare Two Sketches</div>
+        <div class="tab" id="tab_1">Character Recognition</div>
+        
       </div>
       <div class="clear"></div>
       <div class="demo" id="demo_1">
-        <p>Can't remember the name of a character or symbol?  Draw it in the box below and we'll tell you what it is!</p>
+        <p>Draw a letter in the box below and we'll tell you what it is!</p>
         <div>Draw here:</div>
-        <div id="sketchpad_editor_1" class="sketchpad"></div>
+        <div id="demo_1_sketchpad_editor" class="sketchpad"></div>
         <div class="result_box">
-          <div>Result:&nbsp; &nbsp;<span id="res_text_1"></span></div>
-          <div>Similarity:&nbsp; &nbsp;<span id="result_1" class="match_result">99.8%</span></div>
+          <div>Best Result:&nbsp; &nbsp;<span id="demo_1_res_text_1"></span></div>
+          <div>Similarity:&nbsp; &nbsp;<span id="demo_1_result_1" class="match_result"></span></div>
+          <br/>
+          <div>Next Best Result:&nbsp; &nbsp;<span id="demo_1_res_text_2"></span></div>
+          <div>Similarity:&nbsp; &nbsp;<span id="demo_1_result_2" class="match_result"></span></div>
         </div>
         <div class="clear"></div>
-        <div class="clear_button button" id="clear_button_1">Clear</div>
+        <div class="clear_button button" id="demo_1_clear_button">Clear</div>
 
         
 
@@ -394,15 +647,15 @@
         <p>Sketchy.js can be used to teach people the alphabet</p>
         <div id="demo_2_directions">Draw the letter: <b><span id="demo_2_text">Q</span></b></div>
 
-        <div class="new_letter_button button" id="new_letter_button_2">New Letter</div> 
-        <div id="sketchpad_editor_2" class="sketchpad"></div>
+        <div class="new_letter_button button" id="demo_2_new_letter_button">New Letter</div>  
+        <div id="demo_2_sketchpad_editor" class="sketchpad"></div>
         
         <div class="clear"></div>
-        <div class="done_button button" id="done_button_2">Done</div>
-        <div class="clear_button button" id="clear_button_2">Clear</div>
-
+        <!--<div class="done_button button" id="demo_2_done_button">Done</div>-->
+        <div class="clear_button button" id="demo_2_clear_button">Clear</div>
+        <div id="demo_2_accuracy" class="accuracy_box">Accuracy:&nbsp; &nbsp;<span id="demo_2_result" class="match_result"></span></div>
         <div class="clear"></div>
-        <div id="accuracy_2" class="accuracy_box">Accuracy:&nbsp; &nbsp;<span id="result_2" class="match_result"></span></div>
+        
 
 
       </div>
@@ -418,15 +671,34 @@
         
         <div class="button_wrap" id="demo_3_button_wrap">
           <div class="new_eq_button button" id="demo_3_new_button">New Equation</div> 
-          <div class="done_button button" id="demo_3_done_button">Done</div>
+          <div class="done_button button" id="demo_3_done_button">Submit</div>
           <div class="clear_button button" id="demo_3_clear_button">Clear</div>
+
+          
         </div>
 
         <div class="clear"></div>
+        <div id="demo_3_answer"></div>
       </div>
 
       <div class="demo" id="demo_4">
         <p>This is a simple example to compare two sketches</p>
+
+        <div id="demo_4_content_wrap">
+          <div id="demo_4_sketchpad_1" class="sketchpad"></div>
+          <div id="demo_4_middle_col">
+            <div id="demo_4_results">
+              <!--<div class="compare_button button" id="demo_4_compare_button">Compare</div>-->
+              Similarity: <span id="demo_4_results_text"></span>
+
+            </div>
+            <div class="clear_button button" id="demo_4_clear_button">Clear Both</div>
+          </div>
+          <div id="demo_4_sketchpad_2" class="sketchpad"></div>
+
+        </div>
+
+        <div class="clear"></div>
 
 
       </div>

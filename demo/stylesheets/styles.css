@@ -138,15 +138,16 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#beced7', end
 	margin-left: 5px;
 	padding: 3px;
  }
-#done_button_2{
+#demo_2_done_button{
 	float: left;
 }
 
- #clear_button_2{
+ #demo_2_clear_button{
  	float:left;
+ 	padding: 3px;
  }
 
- #accuracy_2{
+ #demo_2_accuracy{
  	margin-left: 5px;
  }
 
@@ -156,8 +157,10 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#beced7', end
 
  .accuracy_box{
  	padding: 5px;
- 	width: 200px;
- 	margin-top: 10px;
+ 	width: 140px;
+ 	/*margin-top: 10px;*/
+ 	border-radius: 8px;
+ 	float: left;
  }
 
 
@@ -187,4 +190,41 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#beced7', end
 	float: none;
 	margin-left: 10px;
 	margin-top: 10px;
+}
+
+#demo_3_answer {
+	width: 140px;
+	border-radius: 8px;
+	padding: 5px;
+	margin: 10px 5px;
+	font-weight: bold;
+}
+
+
+ /*******************
+ * Demo 4 Styles 
+ *******************/
+#demo_4_content_wrap > div{
+	float: left;
+	width: 200px;
+
+}
+
+#demo_4_middle_col{
+		text-align: center;
+	vertical-align: middle;
+}
+
+#demo_4_clear_button{
+	margin-left: 40px;
+	margin-top: 10px;
+	width: 100px;
+}
+
+#demo_4_results {
+	margin-top: 90px;
+	margin-left: 20px;
+	margin-right: 20px;
+	border-radius: 6px;
+
 }

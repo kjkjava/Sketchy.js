@@ -129,6 +129,50 @@
     return distance;
   };
 
+  // Accepts an array of point arrays (multiple paths) and distributes a
+  // specified number of points accross them, using the
+  // distributePointsAcrossPath method.  This returns numberOfPoints point
+  // objects in a single array, thus, path information is intentionally lost.
+  Sketchy.scatterPoints = function(paths, numberOfPoints) {
+    var pointsNotAssigned = numberOfPoints,
+        result = [],
+        pathLength, lengthNotCovered, numberOfPointsForPath, path, point, i;
+
+    // Compute the length of all paths
+    lengthNotCovered = 0;
+    for(i=0; i<paths.length; i++) {
+      lengthNotCovered += Sketchy.computeLength(paths[i], Sketchy.euclideanDistance);
+    }
+
+    // Scatter points
+    for(i=0; i<paths.length; i++) {
+      path = paths[i];
+
+      // Determine how many points this path will get, based on distance
+      // The last path automatically gets any remaining points just in case
+      // there is imprecision in the calculations
+      pathLength = Sketchy.computeLength(path, Sketchy.euclideanDistance);
+      numberOfPointsForPath = Math.round((pathLength / lengthNotCovered) * pointsNotAssigned);
+      if(i==paths.length-1) {
+        path = Sketchy.distributePointsAcrossPath(path, pointsNotAssigned);
+        pointsNotAssigned = 0;
+        lengthNotCovered = 0;
+      } else {
+        path = Sketchy.distributePointsAcrossPath(path, numberOfPointsForPath);
+        pointsNotAssigned -= numberOfPointsForPath;
+        lengthNotCovered -= pathLength;
+      }
+
+      // Put the points into the result array, disregarding separate paths
+      for(j=0; j<path.length; j++) {
+        point = path[j];
+        result.push({x:point.x, y:point.y}); // copy of the point, not reference
+      }
+    }
+
+    return result;
+  };
+
   Sketchy.distributePointsAcrossPath = function(path, numberOfPoints) {
     var result, pathIndexDelta, point, i,
         currPathIndex=0;

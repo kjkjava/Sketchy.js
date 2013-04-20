@@ -57,6 +57,13 @@
 					json = Sketchy.convertPointArraysToSVG(paths);
 					sketchpad_editor_2.json(json);
 				});
+				$("#buttonScatterPoints").click(function() {
+					var paths, result, json;
+					paths = Sketchy.convertSVGtoPointArrays(sketchpad_editor_1.json());
+					result = Sketchy.scatterPoints(paths, 10);
+					json = Sketchy.convertPointArraysToSVG([result]);
+					sketchpad_editor_2.json(json);
+				});
 			});
 		</script>
 	</head>
@@ -106,6 +113,9 @@
 
 			<h3>distributePointsAcrossPath</h3>
 			<p><input type="button" id="buttonDistributePointsAcrossPath" value="Sketch 1 --process--> Sketch 2"></input></p>
+
+			<h3>scatterPoints</h3>
+			<p><input type="button" id="buttonScatterPoints" value="Sketch 1 --process--> Sketch 2"></input></p>
 		</div><!--#container-->
 	</body>
 </html>

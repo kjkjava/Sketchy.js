@@ -130,31 +130,33 @@
   };
 
   Sketchy.distributePointsAcrossPath = function(path, numberOfPoints) {
-    var result, pathIndexDelta, i,
+    var result, pathIndexDelta, point, i,
         currPathIndex=0;
 
     if(numberOfPoints <= 0) {
       return [];
     }
     if(numberOfPoints == 1) {
-      // TODO: Is this creating a copy of the original point, or its reference?
-      //       Check for this concern elsewhere.
-      return [path[Math.floor((path.length-1)/2)]];
+      point = path[Math.floor((path.length-1)/2)]; // reference to original
+      return [{x:point.x, y:point.y}]; // return a copy
     }
 
     pathIndexDelta = path.length/(numberOfPoints-1);
 
     // If numberOfPoints >= 2, we will manually add the first and last points
     // Add the first
-    result = [path[0]];
+    point = path[0];
+    result = [{x:point.x, y:point.y}];
 
     for(i=1; i<numberOfPoints-1; i++) {
       currPathIndex += pathIndexDelta;
-      result.push(path[Math.round(currPathIndex)]);
+      point = path[Math.round(currPathIndex)];
+      result.push({x:point.x, y:point.y});
     }
 
     // Add the last
-    result.push(path[path.length-1]);
+    point = path[path.length-1];
+    result.push(x:point.x, y:point.y);
 
     return result;
   };

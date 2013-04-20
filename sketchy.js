@@ -156,7 +156,7 @@
 
     // Add the last
     point = path[path.length-1];
-    result.push(x:point.x, y:point.y);
+    result.push({x:point.x, y:point.y});
 
     return result;
   };

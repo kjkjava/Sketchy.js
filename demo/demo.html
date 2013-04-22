@@ -19,7 +19,7 @@
     <script src="jquery-migrate-1.1.1.min.js"></script>
     <script src="raphael-min.js"></script>
     <script src="raphael.sketchpad.js"></script>
-    <script src="dataset.js"></script>
+    <script src="simplified_dataset.js"></script>
 
     <script type="text/javascript">
 			$(document).ready(function() { // FYI, "$(function(){" is an alias to this line
@@ -81,9 +81,6 @@
               editing: true // default
           });
 
-          /*var results = ["", "&alpha;", "&beta;", "&gamma;", "&delta;", "&epsilon;", "&zeta;", "&eta;", "&theta;", "&iota;", "&kappa;", 
-                        "&lambda;", "&mu;",    "&nu;",   "&xi;",      "&pi;",    "&rho;", "&sigma;", "&tau;",   "&upsilon;", "&omega;"];
-          */
 
           sketchpad_editor_obj_1.change(function() {
                 //generate a random percent based on the json data
@@ -137,6 +134,7 @@
                 second_index = -1
 
                 //now let's do it again ... with style
+                //i.e. let's do it again, but with actual calls to compare shape
                 /*
                 for (i=0; i<ALL_LETTERS_KEYS.length; i++){
                   matchPerc = compareShape(jsontext, ALL_LETTERS[i]);

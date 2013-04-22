@@ -91,8 +91,47 @@
     svgXML += "\n</svg>";
     return svgXML;
   };
-  
+
+  // shape1 and shape2 should be stringified JSON data from Raphael SketchPad
   Sketchy.shapeContextMatch = function(shape1, shape2) {
+    var pointsPerShape = 50, // constant
+        points1, points2, distanceMatrix, distanceTotal, distanceMean, i, j;
+
+    // Scatter points around each of the paths.  The algorithm
+    // will only be using these points (as feature descriptors),
+    // not the shapes.
+    // TODO: Improve this portion of the algorithm.  Currently,
+    //       a fixed number of points will be chosen regardless
+    //       of path length.  The algorithm could be modified to
+    //       work when shape1 and shape2 have different point counts.
+    points1 = Sketchy.scatterPoints(Sketchy.convertSVGtoPointArrays(shape1), pointsPerShape);
+    points2 = Sketchy.scatterPoints(Sketchy.convertSVGtoPointArrays(shape2), pointsPerShape);
+
+    // Create a square 2D array and initialize it with 0s in the diagonal
+    distanceMatrix = [];
+    for(i=0; i<pointsPerShape; i++) {
+      distanceMatrix[i] = [];
+      distanceMatrix[i][i] = 0;
+    }
+
+    // Go through the upper triangle of the matrix, computing the distance, mirroring to the lower
+    distanceTotal = 0;
+    for(i=0; i<pointsPerShape-1; i++) {
+      for(j=i+1; j<pointsPerShape; j++) {
+        distanceMatrix[i][j] = distanceMatrix[j][i] = Sketchy.euclideanDistance(points1[i].x, points1[i].y, points2[j].x, points2[j].y);
+        distanceTotal += distanceMatrix[i][j];
+      }
+    }
+    distanceTotal *= 2; // 0s were already summed in, we just need to double it since we only went through the upper triangle
+    distanceMean = distanceTotal/Math.pow(pointsPerShape,2);
+
+    // normalize by the mean distance
+    for(i=0; i<pointsPerShape; i++) {
+      for(j=0; j<pointsPerShape; j++) {
+        distanceMatrix[i][j] /= distanceMean;
+      }
+    }
+
     return 0;
   };
 

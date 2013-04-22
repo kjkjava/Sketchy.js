@@ -64,6 +64,11 @@
 					json = Sketchy.convertPointArraysToSVG([result]);
 					sketchpad_editor_2.json(json);
 				});
+				$("#buttonShapeContextMatch").click(function() {
+					var result;
+					result = Sketchy.shapeContextMatch(sketchpad_editor_1.json(), sketchpad_editor_2.json());
+					alert("Result: " + result);
+				});
 			});
 		</script>
 	</head>
@@ -116,6 +121,9 @@
 
 			<h3>scatterPoints</h3>
 			<p><input type="button" id="buttonScatterPoints" value="Sketch 1 --process--> Sketch 2"></input></p>
+
+			<h3>shapeContextMatch</h3>
+			<p><input type="button" id="buttonShapeContextMatch" value="Test on Sketch 1 and Sketch 2"></input></p>
 		</div><!--#container-->
 	</body>
 </html>

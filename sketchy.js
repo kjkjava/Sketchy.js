@@ -98,6 +98,8 @@
         points1, points2,
         distanceMatrix, distanceTotal, distanceMean, distanceBinSmallest = 0.125, distanceBinCount = 5, distanceBins,
         angleMatrix, angleBinCount = 12, angleBins,
+        costMatrix,
+        distanceBinNumber, angleBinNumber, ksum,
         i, j, k;
 
     // Scatter points around each of the paths.  The algorithm
@@ -146,8 +148,9 @@
 
     // Double the acceptable radius each iteration, increasing the bin number
     // each time a point is still in the running.  0 means the point was not in
-    // any bins, 1 means it was in the outer, and distanceBinCount (e.g. 5) means
-    // it is in the closest bin (including the same point)
+    // any bins (and will not be counted), 1 means it was in the outer, and
+    //distanceBinCount (e.g. 5) means it is in the closest bin (including the
+    // same point)
     for(k=0; k<distanceBinCount; k++) {
       for(i=0; i<pointsPerShape; i++) {
         for(j=0; j<pointsPerShape; j++) {
@@ -187,6 +190,28 @@
     for(i=0; i<pointsPerShape; i++) {
       for(j=0; j<pointsPerShape; j++) {
         angleBins[i][j] = angleBins[j][i] = 1+Math.floor(angleMatrix[i][j]/(2*Math.PI/angleBinCount));
+      }
+    }
+
+    // Cost Matrix //
+    // Compute the cost matrix.  This skips the combined histogram for the sake
+    // of efficiency.
+    costMatrix = [];
+    for(i=0; i<pointsPerShape; i++) {
+      costMatrix[i] = [];
+      for(j=0; j<pointsPerShape; j++) {
+        // Go through all K bins.
+        ksum = 0;
+        for(logr=1; logr<=distanceBinCount; logr++) {
+          for(theta=1; theta<=angleBinCount; theta++) {
+            // calculate hik and hjk
+            hik = Sketchy.shapeContextHistogram(i, distanceBinNumber, angleBinNumber, distanceBins, angleBins);
+            hjk = Sketchy.shapeContextHistogram(j, distanceBinNumber, angleBinNumber, distanceBins, angleBins);
+
+            ksum += Math.pow(hik-hjk,2) / (hik + hjk);
+          }
+        }
+        costMatrix[i][j] = 1/2 * ksum;
       }
     }
 

@@ -95,7 +95,10 @@
   // shape1 and shape2 should be stringified JSON data from Raphael SketchPad
   Sketchy.shapeContextMatch = function(shape1, shape2) {
     var pointsPerShape = 50, // constant
-        points1, points2, distanceMatrix, distanceTotal, distanceMean, i, j;
+        points1, points2,
+        distanceMatrix, distanceTotal, distanceMean, distanceBinSmallest = 0.125, distanceBinCount = 5, distanceBins,
+        angleMatrix, angleBinCount = 12, angleBins,
+        i, j, k;
 
     // Scatter points around each of the paths.  The algorithm
     // will only be using these points (as feature descriptors),
@@ -125,10 +128,65 @@
     distanceTotal *= 2; // 0s were already summed in, we just need to double it since we only went through the upper triangle
     distanceMean = distanceTotal/Math.pow(pointsPerShape,2);
 
-    // normalize by the mean distance
+    // Normalize by the mean distance
     for(i=0; i<pointsPerShape; i++) {
       for(j=0; j<pointsPerShape; j++) {
         distanceMatrix[i][j] /= distanceMean;
+      }
+    }
+
+    // Initialize the distance bins with all 0s
+    distanceBins = [];
+    for(i=0; i<pointsPerShape; i++) {
+      distanceBins[i] = [];
+      for(j=0; j<pointsPerShape; j++) {
+        distanceBins[i][j] = 0;
+      }
+    }
+
+    // Double the acceptable radius each iteration, increasing the bin number
+    // each time a point is still in the running.  0 means the point was not in
+    // any bins, 1 means it was in the outer, and distanceBinCount (e.g. 5) means
+    // it is in the closest bin (including the same point)
+    for(k=0; k<distanceBinCount; k++) {
+      for(i=0; i<pointsPerShape; i++) {
+        for(j=0; j<pointsPerShape; j++) {
+          if(distanceMatrix[i][j] < distanceBinSmallest) {
+            distanceBins[i][j]++;
+            distanceBins[j][i]++;
+          }
+        }
+      }
+      distanceBinSmallest *= 2;
+    }
+
+    // Angles //
+
+    // Create a square 2D array and initialize it with 0s in the diagonal
+    angleMatrix = [];
+    for(i=0; i<pointsPerShape; i++) {
+      angleMatrix[i] = [];
+      angleMatrix[i][i] = 0;
+    }
+
+    // Compute the angle matrix, much like the distance matrix
+    for(i=0; i<pointsPerShape-1; i++) {
+      for(j=i+1; j<pointsPerShape; j++) {
+        // Adding 2pi and modding by 2pi changes the -pi to pi range to a 0 to 2pi range
+        angleMatrix[i][j] = angleMatrix[j][i] = (Math.atan2(points2[j].y - points1[i].y, points2[j].x - points1[i].x) + 2*Math.PI) % (2*Math.PI);
+      }
+    }
+
+    // Initialize the angle bins
+    angleBins = [];
+    for(i=0; i<pointsPerShape; i++) {
+      angleBins[i] = [];
+    }
+
+    // Compute the angle bins
+    for(i=0; i<pointsPerShape; i++) {
+      for(j=0; j<pointsPerShape; j++) {
+        angleBins[i][j] = angleBins[j][i] = 1+Math.floor(angleMatrix[i][j]/(2*Math.PI/angleBinCount));
       }
     }
 
@@ -234,7 +292,7 @@
     for(i=1; i<numberOfPoints-1; i++) {
       currPathIndex += pathIndexDelta;
       point = path[Math.round(currPathIndex)];
-      result.push({x:point.x, y:point.y});
+      result.push({x:point.x, y:point.y}); // TODO: an error occurs (point is undefined) here when a short paths are drawn and shapeContextMatch is called
     }
 
     // Add the last

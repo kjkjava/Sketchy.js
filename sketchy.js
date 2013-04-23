@@ -250,7 +250,7 @@
       // there is imprecision in the calculations
       pathLength = Sketchy.computeLength(path, Sketchy.euclideanDistance);
       numberOfPointsForPath = Math.round((pathLength / lengthNotCovered) * pointsNotAssigned);
-      if(i==paths.length-1) {
+      if(i === paths.length-1) {
         path = Sketchy.distributePointsAcrossPath(path, pointsNotAssigned);
         pointsNotAssigned = 0;
         lengthNotCovered = 0;
@@ -277,7 +277,7 @@
     if(numberOfPoints <= 0) {
       return [];
     }
-    if(numberOfPoints == 1) {
+    if(numberOfPoints === 1) {
       point = path[Math.floor((path.length-1)/2)]; // reference to original
       return [{x:point.x, y:point.y}]; // return a copy
     }
@@ -369,7 +369,7 @@
       for (x1=0; x1<w; x1++) {
         // check only alpha channel
         value1 = d1[(x1+y1*w)*4+3];
-        if (value1==0) {
+        if (value1 === 0) {
           continue;
         }
         h_min = Number.MAX_VALUE;
@@ -377,7 +377,7 @@
           for (x2=0; x2<w; x2++) {
           // check only alpha channel
             value2 = d2[(x2+y2*w)*4+3];
-            if (value2==0) {
+            if (value2 === 0) {
               continue;
             }
             dis = Sketchy.euclideanDistance(x1,y1,x2,y2);

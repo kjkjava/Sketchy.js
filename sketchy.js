@@ -193,6 +193,25 @@
     return 0;
   };
 
+  // Sums up the number of points (relative to point pointIndex) in a particular
+  // bin, defined by distanceBinNumber and angleBinNumber.  The pair
+  // (distanceBinNumber, angleBinNumber) defines what is typically called
+  // k, the polar bin.  This replaces the space requirement of a
+  // 2D/k-bin histogram for each point.
+  Sketchy.shapeContextHistogram = function(pointIndex, distanceBinNumber, angleBinNumber, distanceBins, angleBins) {
+    var i, accumulator=0, numberOfPoints=distanceBins.length;
+    for(i=0; i<numberOfPoints; i++) {
+      if(i!==pointIndex &&
+         distanceBins[pointIndex][i]===distanceBinNumber &&
+         angleBins[pointIndex][i]===angleBinNumber) {
+        accumulator++;
+      }
+    }
+    // Normalize by numberOfPoints (technically should be by numberOfPoints-1?)
+    // Shouldn't make a difference
+    return accumulator/numberOfPoints;
+  };
+
   // Compute the Euclidean distance (as a crow flies) between two points.
   // Shortest distance between two pixels
   Sketchy.euclideanDistance = function(x1, y1, x2, y2) {

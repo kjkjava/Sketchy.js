@@ -405,34 +405,18 @@
   // Calculate the lowest upper bound over all points in shape1
   // of the distances to shape2.
   // TODO: Make it faster!
-  Sketchy.hausdorff = function(pixels1, pixels2, w, h) {
-    var h_max = Number.MIN_VALUE, h_min;
-    var d1=pixels1.data, d2=pixels2.data;
-    var value1, value2, dis, x1, y1, x2, y2;
-    for (y1=0; y1<h; y1++) {
-      for (x1=0; x1<w; x1++) {
-        // check only alpha channel
-        value1 = d1[(x1+y1*w)*4+3];
-        if (value1 === 0) {
-          continue;
-        }
-        h_min = Number.MAX_VALUE;
-        for (y2=0; y2<h; y2++) {
-          for (x2=0; x2<w; x2++) {
-          // check only alpha channel
-            value2 = d2[(x2+y2*w)*4+3];
-            if (value2 === 0) {
-              continue;
-            }
-            dis = Sketchy.euclideanDistance(x1,y1,x2,y2);
-            if (dis < h_min) {
+  Sketchy.hausdorff = function(points1, points2) {
+    var h_max = Number.MIN_VALUE, h_min, dis;
+    for (var i = 0; i < points1.length; i++) {
+      h_min = Number.MAX_VALUE;
+      for (var j = 0; j < points2.length; j++) {
+        dis = Filters.euclideanDistance(points1[i].x,points1[i].y,points2[j].x,points2[j].y);
+        if (dis < h_min) {
              h_min = dis;
-            }
-          }
-        }
-        if (h_min > h_max)
-          h_max = h_min;
+        } else if (dis == 0) {break;}
       }
+      if (h_min > h_max)
+        h_max = h_min;
     }
     return h_max;
   }
@@ -440,16 +424,27 @@
   // Compute hausdorffDistance hausdorff(shape1, shape2) and hausdorff(shape2, shape1) and return
   // the maximum value.
   Sketchy.hausdorffDistance = function(shape1, shape2) {
+    var points1 = [], points2 = [];
     var c1 = document.getElementById(shape1);
     var c2 = document.getElementById(shape2);
     var ctx1 = c1.getContext('2d');
     var ctx2 = c2.getContext('2d');         
     var idata1 = ctx1.getImageData(0,0,c1.width,c1.height);
     var idata2 = ctx2.getImageData(0,0,c2.width,c2.height);
-    var h1 = Sketchy.hausdorff(idata1, idata2, c1.width, c1.height);
-    var h2 = Sketchy.hausdorff(idata2, idata1, c1.width, c1.height);
-    alert(Math.max(h1,h2));
-    return Math.max(h1,h2);
+    for (var y1=0; y1<c1.height; y1++) {
+      for (var x1=0; x1<c1.width; x1++) {
+        if (idata1.data[(x1+y1*c1.width)*4+3]>0) {
+          points1.push({x:x1, y:y1});
+        }
+        if (idata2.data[(x1+y1*c1.width)*4+3]>0) {
+          points2.push({x:x1, y:y1});
+        }
+      }
+    }
+    var h1 = Sketchy.hausdorff(points1, points2);
+    var h2 = Sketchy.hausdorff(points2, points1);
+    var accuracy =Math.max(h1,h2) ;
+    return Math.pow(accuracy/(300*Math.sqrt(2)), 1/1.5);
   }; 
 
   // TODO: Opening and Closing Operation

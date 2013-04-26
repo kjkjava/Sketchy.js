@@ -30,7 +30,7 @@
         ///////////////////
 
         //set the first demo to be displayed
-        demoNum = "3"  //change this back to 1 when done
+        demoNum = "1"  //change this back to 1 when done
 
         //display the first demo by default
         $('#demo_' + demoNum).show();
@@ -68,7 +68,48 @@
         //set up the fourth demo
         initDemo4();
 
+
+        //make those dataset boxes things
+        generateDataset();
+        $("#invisible_dataset").hide();
+        $("#invisible_dudes").hide();
+
       });
+
+      function generateDataset(){
+        //create a bunch of sketchpads using
+        // jsonArray - array of json objects
+        // divName - a parent div to put them all in
+        function createSketchpads(jsonArray, divName){
+          var objArray = new Array();
+          for(i = 0; i<jsonArray.length; i++){
+            //<div id = "divName_i" class = "sketchpad"></div>
+            newDiv = "<div id='" + divName + "_" + i +"' class='sketchpad'></div>"
+            $("#"+divName).append(newDiv);
+
+            obj = Raphael.sketchpad((divName + "_" + i), {
+              width: 300,
+              height: 300,
+              editing: false,
+              strokes: jsonArray[i]
+            });
+
+            objArray.push(obj);
+          }
+
+          $("#"+divName).append("<div class='clear'></div> ")
+          return objArray;
+        }
+
+
+        //merge the whole dataset
+        var combinedArray = NUMBERS.concat(ALL_LETTERS.concat(OPERATIONS))
+        //make sketchpads for each symbol
+        var raphObjs = createSketchpads(combinedArray, "invisible_dataset")
+        
+
+      }//end generateDataset
+
 
       /////////////////////
       // Demo 1  - Character recognition
@@ -82,12 +123,23 @@
           });
 
 
-          sketchpad_editor_obj_1.change(function() {
+          //sketchpad_editor_obj_1.change(function() {
+            $("#demo_1_submit_button").click(function(){
+
+                algorithm = $("#demo_1_algorithm").val();
+                //console.log(algorithm)
+
+
+                
+
                 //generate a random percent based on the json data
                 jsontext = sketchpad_editor_obj_1.json();
                 rand = Math.random(jsontext);
                 percent = Math.round(rand*10000)/100
                 percentStr = percent +"%"
+
+                /*
+                // RANDOM CODE
 
                 //get a random character
                 randInd = Math.floor(Math.random() * (ALL_LETTERS_KEYS.length - 1 + 1)) + 1;
@@ -122,7 +174,7 @@
                 //update the fields
                 $("#demo_1_result_2").text(percentStr);
                 $("#demo_1_res_text_2").html(ALL_LETTERS_KEYS[randInd]);
-
+                */
 
 
                 best_match = 0
@@ -135,9 +187,14 @@
 
                 //now let's do it again ... with style
                 //i.e. let's do it again, but with actual calls to compare shape
-                /*
+                var result1 = Sketchy.convertSVGtoXML(jsontext);                
+                canvg(document.getElementById('hiddenDude1'), result1.toString());
                 for (i=0; i<ALL_LETTERS_KEYS.length; i++){
-                  matchPerc = compareShape(jsontext, ALL_LETTERS[i]);
+
+                  var result2 = Sketchy.convertSVGtoXML(ALL_LETTERS[i]);                  
+                  canvg(document.getElementById('hiddenDude2'), result2.toString());
+                  
+                  matchPerc = Sketchy.hausdorff('hiddenDude1', 'hiddenDude2');
                   if (matchPerc > best_match){
                     second_match = best_match
                     second_shape = best_shape
@@ -159,7 +216,7 @@
                 //update the fields
                 $("#result_1").text(percentStr);
                 $("#res_text_1").html(ALL_LETTERS_KEYS[best_index]);
-                */
+                
                 
               });
 
@@ -624,6 +681,7 @@
       <div class="clear"></div>
       <div class="demo" id="demo_1">
         <p>Draw a letter in the box below and we'll tell you what it is!</p>
+        <p>Select an algorithm:  <select id="demo_1_algorithm"><option value="hausdorff" >Hausdorff</option><option>Alg 2</option></select></p>
         <div>Draw here:</div>
         <div id="demo_1_sketchpad_editor" class="sketchpad"></div>
         <div class="result_box">
@@ -635,6 +693,7 @@
         </div>
         <div class="clear"></div>
         <div class="clear_button button" id="demo_1_clear_button">Clear</div>
+        <div class="done_button button" id="demo_1_submit_button">Submit</div>
 
         
 
@@ -704,6 +763,15 @@
     </div>
 
   </section>
+</div>
+
+<div id="invisible_dataset">
+
+</div>
+
+<div id="invisible_dudes">
+  <canvas id="hiddenDude1" width="300px" height="300px"></canvas>
+  <canvas id="hiddenDude2" width="300px" height="300px"></canvas>
 </div>
 
 <!-- FOOTER  -->

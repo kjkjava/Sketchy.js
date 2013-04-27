@@ -189,8 +189,17 @@
 
                 //now let's do it again ... with style
                 //i.e. let's do it again, but with actual calls to compare shape
-                var result1 = Sketchy.convertSVGtoXML(sketchpad_editor_obj_1.json(), false);
+                
+
+                var paths, result, json;
+                paths = Sketchy.convertSVGtoPointArrays(jsontext);
+                for (i=0; i<paths.length; i++) {
+                  paths[i] = Sketchy.distributePointsAcrossPath(paths[i], 10);
+                }
+                json = Sketchy.convertPointArraysToSVG(paths);
+                result1 = Sketchy.convertSVGtoXML(json, false);                
                 canvg(document.getElementById('hiddenDude1'), result1.toString());
+                console.log(json);
                 var secMom1 = Sketchy.secondMoment('hiddenDude1');
                 for (i=0; i<ALL_LETTERS_KEYS.length; i++){
                   var result2 = Sketchy.convertSVGtoXML(ALL_LETTERS[i], true);                  

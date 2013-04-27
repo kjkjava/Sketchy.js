@@ -44,8 +44,13 @@
 					console.log(result);
 				});
 				$("#buttonConvertsvgJSPNtosvgXML").click(function() {
-					var result = Sketchy.convertSVGtoXML(sketchpad_editor_1.json());
-					alert(result);
+					var paths, result, json;
+					paths = Sketchy.convertSVGtoPointArrays(sketchpad_editor_1.json());
+					for(i=0; i<paths.length; i++) {
+						paths[i] = Sketchy.distributePointsAcrossPath(paths[i], 10);
+					}
+					json = Sketchy.convertPointArraysToSVG(paths);
+					result = Sketchy.convertSVGtoXML(json, false);
 					canvg(document.getElementById('canvas'), result.toString());
 				});
 				$("#buttonDistributePointsAcrossPath").click(function() {

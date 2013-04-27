@@ -437,12 +437,12 @@
   // Calculate the lowest upper bound over all points in shape1
   // of the distances to shape2.
   // TODO: Make it faster!
-  Sketchy.hausdorff = function(points1, points2) {
+  Sketchy.hausdorff = function(points1, points2, vector2D) {
     var h_max = Number.MIN_VALUE, h_min, dis;
     for (var i = 0; i < points1.length; i++) {
       h_min = Number.MAX_VALUE;
       for (var j = 0; j < points2.length; j++) {
-        dis = Sketchy.euclideanDistance(points1[i].x,points1[i].y,points2[j].x,points2[j].y);
+        dis = Sketchy.euclideanDistance(points1[i].x,points1[i].y,points2[j].x+vector2D.x,points2[j].y+vector2D.y);
         if (dis < h_min) {
              h_min = dis;
         } else if (dis == 0) {break;}
@@ -455,7 +455,7 @@
  
   // Compute hausdorffDistance hausdorff(shape1, shape2) and hausdorff(shape2, shape1) and return
   // the maximum value.
-  Sketchy.hausdorffDistance = function(shape1, shape2) {
+  Sketchy.hausdorffDistance = function(shape1, shape2, center1, center2) {
     var points1 = [], points2 = [];
     var c1 = document.getElementById(shape1);
     var c2 = document.getElementById(shape2);
@@ -473,12 +473,40 @@
         }
       }
     }
-    var h1 = Sketchy.hausdorff(points1, points2);
-    var h2 = Sketchy.hausdorff(points2, points1);
+    var vector2D = {x:center1.x-center2.x, y:center1.y-center2.y};
+    var h1 = Sketchy.hausdorff(points1, points2, vector2D);
+    vector2D.x = -1*vector2D.x;
+    vector2D.y = -1*vector2D.y;
+    var h2 = Sketchy.hausdorff(points2, points1, vector2D);
     var accuracy =Math.max(h1,h2) ;
-    return Math.pow(accuracy/(300*Math.sqrt(2)), 1/1.5);
+    return Math.pow(accuracy/(300*Math.sqrt(2)), 1/1.1);
   }; 
 
+  Sketchy.secondMoment = function(shape)
+  {
+    var c = document.getElementById(shape);
+    var ctx = c.getContext('2d');
+    var idata = ctx.getImageData(0,0,c.width,c.height);
+    var d = idata.data;
+    var x, y;
+    var moment = {x:0, y:0};
+    var _x=0, _y=0, size=0;
+    for (y=0; y<c.height; y++) {
+      for (x=0; x<c.width; x++) {
+        var value = d[(x+y*c.width)*4+3];
+        if (value>0) {
+          _x+=x;
+          _y+=y;
+          size++;
+        }
+      }
+    }
+    moment.x = _x/size;
+    moment.y = _y/size;
+    return moment;
+  };
+
+  
   // TODO: Opening and Closing Operation
   Sketchy.morphologyOperation = function(shape, frame_size, operation)
   {

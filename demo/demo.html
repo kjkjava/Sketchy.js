@@ -179,11 +179,11 @@
                 */
 
 
-                best_match = 0
+                best_match = 1
                 best_shape = ""
                 best_index = -1
 
-                second_match = 0
+                second_match = 1
                 second_shape = ""
                 second_index = -1
 
@@ -191,12 +191,15 @@
                 //i.e. let's do it again, but with actual calls to compare shape
                 var result1 = Sketchy.convertSVGtoXML(sketchpad_editor_obj_1.json(), false);
                 canvg(document.getElementById('hiddenDude1'), result1.toString());
+                var secMom1 = Sketchy.secondMoment('hiddenDude1');
                 for (i=0; i<ALL_LETTERS_KEYS.length; i++){
                   var result2 = Sketchy.convertSVGtoXML(ALL_LETTERS[i], true);                  
                   canvg(document.getElementById('hiddenDude2'), result2.toString());
-                  matchPerc = Sketchy.hausdorffDistance('hiddenDude1', 'hiddenDude2');
-                  console.log(matchPerc);
-                  if (matchPerc > best_match){
+                  var secMom2 = Sketchy.secondMoment('hiddenDude2')
+                  matchPerc = Sketchy.hausdorffDistance('hiddenDude1', 'hiddenDude2',secMom1, secMom2);
+                  console.log(ALL_LETTERS_KEYS[i] + " " + matchPerc);
+                  
+                  if (matchPerc < best_match){
                     second_match = best_match
                     second_shape = best_shape
                     second_index = best_index
@@ -204,13 +207,13 @@
                     best_match = matchPerc
                     best_shape = ALL_LETTERS[i]
                     best_index = i
-                  } else if (matchPerc > second_match){
+                  } else if (matchPerc < second_match){
                     second_match = matchPerc
                     second_shape = ALL_LETTERS[i]
                     second_index = i
                   }
                 }
-
+                console.log("Best match: " + ALL_LETTERS_KEYS[best_index]);
                 percent = matchPerc
                 percentStr = percent + "%"
 

@@ -479,7 +479,7 @@
     vector2D.y = -1*vector2D.y;
     var h2 = Sketchy.hausdorff(points2, points1, vector2D);
     var accuracy =Math.max(h1,h2) ;
-    return Math.pow(accuracy/(300*Math.sqrt(2)), 1/2);
+    return Math.pow(accuracy*Math.sqrt(2)/300, 1/2);
   }; 
 
   Sketchy.secondMoment = function(shape)

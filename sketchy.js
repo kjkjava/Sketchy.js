@@ -171,11 +171,11 @@
     // Double the acceptable radius each iteration, increasing the bin number
     // each time a point is still in the running.  0 means the point was not in
     // any bins (and will not be counted), 1 means it was in the outer, and
-    //distanceBinCount (e.g. 5) means it is in the closest bin (including the
-    // same point)
+    // distanceBinCount (e.g. 5) means it is in the closest bin (including the
+    // same point).
     for(k=0; k<distanceBinCount; k++) {
       for(i=0; i<pointsPerShape; i++) {
-        for(j=0; j<pointsPerShape; j++) {
+        for(j=i+1; j<pointsPerShape; j++) {
           if(distanceMatrix1[i][j] < distanceBinSmallest) {
             distanceBins1[i][j]++;
             distanceBins1[j][i]++;
@@ -247,7 +247,6 @@
         costMatrix[i][j] = 1/2 * ksum;
       }
     }
-    console.log(costMatrix);
     return Sketchy.hungarian(costMatrix);
   };
 

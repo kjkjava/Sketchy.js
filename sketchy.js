@@ -463,8 +463,8 @@
     var ctx2 = c2.getContext('2d');         
     var idata1 = ctx1.getImageData(0,0,c1.width,c1.height);
     var idata2 = ctx2.getImageData(0,0,c2.width,c2.height);
-    for (var y1=0; y1<c1.height; y1++) {
-      for (var x1=0; x1<c1.width; x1++) {
+    for (var y1=0; y1<c1.height; y1+=4) {
+      for (var x1=0; x1<c1.width; x1+=4) {
         if (idata1.data[(x1+y1*c1.width)*4+3]>0) {
           points1.push({x:x1, y:y1});
         }

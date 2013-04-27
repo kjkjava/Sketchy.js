@@ -73,12 +73,13 @@
 
 
   // Takes in SVG data (from Raphael SketchPad) and outputs an svgXML file.
-  Sketchy.convertSVGtoXML = function(json)
+  Sketchy.convertSVGtoXML = function(json, parsed)
   {
     var i, j, splitPath, point, svgXML;
     //svgXML = "<?xml version=\"1.0\" standalone=\"no\"?>\n<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n"; 
     svgXML = "<svg>"; // width=\"100%\" height=\"100%\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\"> ";
-    json = JSON.parse(json);
+    if(!parsed)
+      json = JSON.parse(json);
     for(i=0; i<json.length; i++) {
       svgXML += "\n<path fill=\"none\" stroke-opacity=\"1\" stroke=\"#000000\" stroke-linecap=\"round\" stroke-width=\"5\" stroke-linejoin=\"round\" type=\"path\" d=\"M ";
       splitPath = json[i].path.slice(1).split("L");
@@ -410,7 +411,7 @@
     for (var i = 0; i < points1.length; i++) {
       h_min = Number.MAX_VALUE;
       for (var j = 0; j < points2.length; j++) {
-        dis = Filters.euclideanDistance(points1[i].x,points1[i].y,points2[j].x,points2[j].y);
+        dis = Sketchy.euclideanDistance(points1[i].x,points1[i].y,points2[j].x,points2[j].y);
         if (dis < h_min) {
              h_min = dis;
         } else if (dis == 0) {break;}

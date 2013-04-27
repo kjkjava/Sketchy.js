@@ -20,7 +20,8 @@
     <script src="raphael-min.js"></script>
     <script src="raphael.sketchpad.js"></script>
     <script src="simplified_dataset.js"></script>
-    <script src="canvg.js"></script>
+    <script type="text/javascript" src="canvg.js"></script>
+    <script type="text/javascript" src="rgbcolor.js"></script>
     <script src="../sketchy.js"></script>
     <script type="text/javascript">
 			$(document).ready(function() { // FYI, "$(function(){" is an alias to this line
@@ -188,16 +189,13 @@
 
                 //now let's do it again ... with style
                 //i.e. let's do it again, but with actual calls to compare shape
-                var result1 = Sketchy.convertSVGtoXML(sketchpad_editor_obj_1.json());                
-                //console.log(result1);
-                //canvg(document.getElementById('hiddenDude1'), result1.toString());
+                var result1 = Sketchy.convertSVGtoXML(sketchpad_editor_obj_1.json(), false);
+                canvg(document.getElementById('hiddenDude1'), result1.toString());
                 for (i=0; i<ALL_LETTERS_KEYS.length; i++){
-
-                  var result2 = Sketchy.convertSVGtoXML(ALL_LETTERS[i]);                  
-                  console.log(result2);
-                  //canvg(document.getElementById('hiddenDude2'), result2.toString());
-                  
-                  //matchPerc = Sketchy.hausdorffDistance('hiddenDude1', 'hiddenDude2');
+                  var result2 = Sketchy.convertSVGtoXML(ALL_LETTERS[i], true);                  
+                  canvg(document.getElementById('hiddenDude2'), result2.toString());
+                  matchPerc = Sketchy.hausdorffDistance('hiddenDude1', 'hiddenDude2');
+                  console.log(matchPerc);
                   if (matchPerc > best_match){
                     second_match = best_match
                     second_shape = best_shape

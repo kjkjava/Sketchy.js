@@ -12,7 +12,7 @@
   <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/styles.css">
   <script src="json2.js"></script>
   <!-- The // notation will not work well locally on the file:// protocol, so the local fallback will be used. -->
- <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>-->
+  <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>-->
   <script>window.jQuery || document.write('<script src="jquery-1.9.1.min.js"><\/script>')</script>
 		<!-- jQuery Migrate must be used... see my bug report:
     https://github.com/ianli/raphael-sketchpad/issues/15 -->
@@ -20,7 +20,7 @@
     <script src="raphael-min.js"></script>
     <script src="raphael.sketchpad.js"></script>
     <!--<script src="simplified_dataset.js"></script>-->
-    <script src="dataset.js"></script>
+    <script src="new_dataset.js"></script>
     <script type="text/javascript" src="canvg.js"></script>
     <script type="text/javascript" src="rgbcolor.js"></script>
     <script src="../sketchy.js"></script>
@@ -33,7 +33,7 @@
         ///////////////////
 
         //set the first demo to be displayed
-        demoNum = "3"  //change this back to 1 when done
+        demoNum = "1"  //change this back to 1 when done
 
         //display the first demo by default
         $('#demo_' + demoNum).show();
@@ -50,13 +50,13 @@
           //update demo containers
           //$(".demo").slideUp(); //these animations are tentative, maybe flash white, then fade in the new content ... idk
          // alert(id + "\n" + $(this).attr('id'))
-          $(".demo").each(function(){
-            if(id.split("_")[1] != $(this).attr('id').split("_")[1])
-              $(this).hide();
-          });
-         // $('#demo_' + demoNum).offset().left - $(this).offset().left + $(this).width()
-          $(id).slideDown();
+         $(".demo").each(function(){
+          if(id.split("_")[1] != $(this).attr('id').split("_")[1])
+            $(this).hide();
         });
+         // $('#demo_' + demoNum).offset().left - $(this).offset().left + $(this).width()
+         $(id).slideDown();
+       });
 
 
         //set up the first demo
@@ -81,7 +81,7 @@
 
       });
 
-      function generateDataset(){
+function generateDataset(){
         //create a bunch of sketchpads using
         // jsonArray - array of json objects
         // divName - a parent div to put them all in
@@ -93,8 +93,8 @@
             $("#"+divName).append(newDiv);
 
             obj = Raphael.sketchpad((divName + "_" + i), {
-              width: 300,
-              height: 300,
+              width: 200,
+              height: 200,
               editing: false,
               strokes: jsonArray[i]
             });
@@ -122,20 +122,20 @@
       function initDemo1(){
           //initialize editor 1
           var sketchpad_editor_obj_1= Raphael.sketchpad("demo_1_sketchpad_editor", {
-              width: 300,
-              height: 300,
+            width: 200,
+            height: 200,
               editing: true // default
-          });
+            });
 
 
           //sketchpad_editor_obj_1.change(function() {
             $("#demo_1_submit_button").click(function(){
 
-                algorithm = $("#demo_1_algorithm").val();
-                console.log("Using algorithm: " + algorithm)
+              algorithm = $("#demo_1_algorithm").val();
+              console.log("Using algorithm: " + algorithm)
 
 
-                
+
 
                 //generate a random percent based on the json data
                 var jsontext = sketchpad_editor_obj_1.json();
@@ -182,11 +182,11 @@
                 */
 
 
-                best_match = 1
+                best_match = 100
                 best_shape = ""
                 best_index = -1
 
-                second_match = 1
+                second_match = 100
                 second_shape = ""
                 second_index = -1
 
@@ -204,6 +204,7 @@
                   console.log(json);
                   var secMom1 = Sketchy.secondMoment('hiddenDude1');
 
+
                 }
 
                 for (i=0; i<ALL_LETTERS_KEYS.length; i++){
@@ -214,26 +215,32 @@
                     var secMom2 = Sketchy.secondMoment('hiddenDude2')
                     matchPerc = Sketchy.hausdorffDistance('hiddenDude1', 'hiddenDude2',secMom1, secMom2);
                     console.log(ALL_LETTERS_KEYS[i] + " " + matchPerc);
+                    //console.log(best_match + ", " + second_match + ", " + matchPerc)
 
-                  //keep track of the best match
-                  if (matchPerc < best_match){
-                    second_match = best_match
-                    second_shape = best_shape
-                    second_index = best_index
+                    //keep track of the best match
+                    if (matchPerc < best_match){
+                      //console.log("before best: "+ best_match + ", second: " + second_match + ", match: " + matchPerc)
+                      second_match = best_match
+                      second_shape = best_shape
+                      second_index = best_index
 
-                    best_match = matchPerc
-                    best_shape = ALL_LETTERS[i]
-                    best_index = i
-                  } else if (matchPerc < second_match){
-                    second_match = matchPerc
-                    second_shape = ALL_LETTERS[i]
-                    second_index = i
-                  }
+                      best_match = matchPerc
+                      best_shape = ALL_LETTERS[i]
+                      best_index = i
+                      //console.log("after best: "+ best_match + ", second: " + second_match + ", match: " + matchPerc)
+                      continue
+                    } else if (matchPerc < second_match){
+                      //console.log("before best: "+ best_match + ", second: " + second_match + ", match: " + matchPerc)
+                      second_match = matchPerc
+                      second_shape = ALL_LETTERS[i]
+                      second_index = i
+                      //console.log("after best: "+ best_match + ", second: " + second_match + ", match: " + matchPerc)
+                    }
 
 
-                  } else if(algorithm == "shape_context"){
-                    try{
-                      matchPerc = Sketchy.shapeContextMatch(jsontext, JSON.stringify(ALL_LETTERS[i] ));
+                } else if(algorithm == "shape_context"){
+                  try{
+                    matchPerc = Sketchy.shapeContextMatch(jsontext, JSON.stringify(ALL_LETTERS[i] ));
                       //matchPerc = matchPerc/100;
                     } catch (err){
                       console.log(ALL_LETTERS_KEYS[i] + " - FAILED ")
@@ -242,11 +249,11 @@
                     console.log(ALL_LETTERS_KEYS[i] + " " + matchPerc);
                      // shape1 and shape2 should be stringified JSON data from Raphael SketchPad
                     //Sketchy.shapeContextMatch = function(shape1, shape2) {
-                  }
+                    }
 
 
                     //keep track of the best match
-                    if (matchPerc > best_match){
+                    if (matchPerc < best_match){
                       second_match = best_match
                       second_shape = best_shape
                       second_index = best_index
@@ -254,13 +261,14 @@
                       best_match = matchPerc
                       best_shape = ALL_LETTERS[i]
                       best_index = i
-                    } else if (matchPerc > second_match){
+                      continue //apparently, the else if case can still get hit otherwise
+                    } else if (matchPerc < second_match){
                       second_match = matchPerc
                       second_shape = ALL_LETTERS[i]
                       second_index = i
                     }
-
-                }
+                      //console.log("best: "+ best_match + ", second: " + second_match + ", match: " + matchPerc)
+                  }//end for loop
 
                 //handle the face that this alg returns ##%, not .##%
                 if(algorithm == "shape_context"){
@@ -285,7 +293,7 @@
                 }
 
                 //second best match
-                percent = 100 - (Math.floor(best_match * 10000)/100)
+                percent = 100 - (Math.floor(second_match * 10000)/100)
                 percent = percent.toString().substring(0,5)
                 percentStr = percent + "%"
 
@@ -306,7 +314,7 @@
             $("#demo_1_result_2").html("");
           });
 
- 
+
 
       }//end initDemo1
 
@@ -316,10 +324,10 @@
       function initDemo2(){
           //initialize editor 2
           var sketchpad_editor_obj_2= Raphael.sketchpad("demo_2_sketchpad_editor", {
-              width: 300,
-              height: 300,
+            width: 200,
+            height: 200,
               editing: true // default
-          });
+            });
 
           var demo_2_letter = newLetter();
           var demo_2_letter_shape = getJSONfromLetter(demo_2_letter);
@@ -372,7 +380,7 @@
                 */
 
                 if(algorithm == "hausdorff"){
-                  
+
 
                   var paths_1, result_1, json_1, paths_2, result_2, json_2;
                   paths_1 = Sketchy.convertSVGtoPointArrays(jsontext);
@@ -418,8 +426,8 @@
 
 
                 } else if(algorithm == "shape_context"){
-                      percent = Sketchy.shapeContextMatch(jsontext, JSON.stringify(ALL_LETTERS[ALL_LETTERS_KEYS.indexOf(demo_2_letter)]));
-                      percent = percent.toString().substring(0,5)
+                  percent = Sketchy.shapeContextMatch(jsontext, JSON.stringify(ALL_LETTERS[ALL_LETTERS_KEYS.indexOf(demo_2_letter)]));
+                  percent = percent.toString().substring(0,5)
                 }
 
 
@@ -452,9 +460,9 @@
                 
 
                 //$("#res_text_1").html(results[randInd]);
-          });
+              });
 
-  
+
           //set up buttons
           $('#demo_2_clear_button').click(function(){
             sketchpad_editor_obj_2.clear();
@@ -488,10 +496,10 @@
       function initDemo3(){
           //initialize editor 3
           var demo_3_sketchpad_editor_obj= Raphael.sketchpad("demo_3_sketchpad", {
-              width: 300,
-              height: 300,
+            width: 200,
+            height: 200,
               editing: true // default
-          });
+            });
 
           //get a new eq right away
           setEquation(newEquation());
@@ -683,26 +691,26 @@
             */
             
             if(algorithm == "hausdorff"){
-                  
-
-                  var paths_1, result_1, json_1, paths_2, result_2, json_2;
-                  paths_1 = Sketchy.convertSVGtoPointArrays(jsontext);
-                  for (i=0; i<paths_1.length; i++) {
-                    paths_1[i] = Sketchy.distributePointsAcrossPath(paths_1[i], 10);
-                  }
-                  json_1 = Sketchy.convertPointArraysToSVG(paths_1);
-                  result_1 = Sketchy.convertSVGtoXML(json_1, false);                
-                  canvg(document.getElementById('hiddenDude1'), result_1.toString());
-                  console.log(json_1);
-                  var secMom1 = Sketchy.secondMoment('hiddenDude1');
 
 
-                  var result2 = Sketchy.convertSVGtoXML(some_number_shape, true);                  
-                  canvg(document.getElementById('hiddenDude2'), result2.toString());
-                  var secMom2 = Sketchy.secondMoment('hiddenDude2')
-                  
+              var paths_1, result_1, json_1, paths_2, result_2, json_2;
+              paths_1 = Sketchy.convertSVGtoPointArrays(jsontext);
+              for (i=0; i<paths_1.length; i++) {
+                paths_1[i] = Sketchy.distributePointsAcrossPath(paths_1[i], 10);
+              }
+              json_1 = Sketchy.convertPointArraysToSVG(paths_1);
+              result_1 = Sketchy.convertSVGtoXML(json_1, false);                
+              canvg(document.getElementById('hiddenDude1'), result_1.toString());
+              console.log(json_1);
+              var secMom1 = Sketchy.secondMoment('hiddenDude1');
 
-                  percent = Sketchy.hausdorffDistance('hiddenDude1', 'hiddenDude2', secMom1, secMom2);
+
+              var result2 = Sketchy.convertSVGtoXML(some_number_shape, true);                  
+              canvg(document.getElementById('hiddenDude2'), result2.toString());
+              var secMom2 = Sketchy.secondMoment('hiddenDude2')
+
+
+              percent = Sketchy.hausdorffDistance('hiddenDude1', 'hiddenDude2', secMom1, secMom2);
 
                   //invert the value
                   percent = 100 - (Math.floor(percent * 10000)/100);
@@ -714,10 +722,10 @@
                   setAnswer(false, percentStr);
                 }
 
-                } else if(algorithm == "shape_context"){
-                      percent = Sketchy.shapeContextMatch(jsontext, JSON.stringify(some_number_shape));
-                      percent = percent.toString().substring(0,5)
-                      percentStr = "    (" + percent + "% wrong)"
+              } else if(algorithm == "shape_context"){
+                percent = Sketchy.shapeContextMatch(jsontext, JSON.stringify(some_number_shape));
+                percent = percent.toString().substring(0,5)
+                percentStr = "    (" + percent + "% wrong)"
 
                   if(percent < 16){  //55%
                     setAnswer(true, percentStr);
@@ -728,9 +736,9 @@
 
 
 
-            console.log("The answer had the following accuracy: " + percent + "\tTrying to match to: " + matchStr)
+                console.log("The answer had the following accuracy: " + percent + "\tTrying to match to: " + matchStr)
 
-          }
+              }
 
           //used to set the "answer" box
           //input is either true or false
@@ -753,14 +761,14 @@
 
           //just clear the answer box thing
           function clearAnswer(){
-              $("#demo_3_answer").slideUp();
-              $("#demo_3_answer").css("background-color", "#FFFFFF");
-              $("#demo_3_answer").text("");
+            $("#demo_3_answer").slideUp();
+            $("#demo_3_answer").css("background-color", "#FFFFFF");
+            $("#demo_3_answer").text("");
           }
 
           //handle changes to the drawing
           demo_3_sketchpad_editor_obj.change(function() {
-              jsontext = demo_3_sketchpad_editor_obj.json();
+            jsontext = demo_3_sketchpad_editor_obj.json();
 
               //compare their drawing to every number
 
@@ -797,25 +805,25 @@
       function initDemo4(){
           //initialize editor 3
           var demo_4_sketchpad_editor_obj_1= Raphael.sketchpad("demo_4_sketchpad_1", {
-              width: 200,
-              height: 200,
+            width: 200,
+            height: 200,
               editing: true // default
-          });
+            });
 
           var demo_4_sketchpad_editor_obj_2= Raphael.sketchpad("demo_4_sketchpad_2", {
-              width: 200,
-              height: 200,
+            width: 200,
+            height: 200,
               editing: true // default
-          });
+            });
 
           var demo_4_json_1 = ""
           var demo_4_json_2 = ""
 
           //method to actually do the comparison and update the result box thing
           function updateSimilarity(){
-                algorithm = $("#demo_4_algorithm").val();
-                console.log("Using algorithm: " + algorithm);
-                percent = 0;
+            algorithm = $("#demo_4_algorithm").val();
+            console.log("Using algorithm: " + algorithm);
+            percent = 0;
 
                 /*
                 //RANDOM CODE
@@ -825,7 +833,7 @@
                 */
 
                 if(algorithm == "hausdorff"){
-                  
+
 
                   var paths_1, result_1, json_1, paths_2, result_2, json_2;
                   paths_1 = Sketchy.convertSVGtoPointArrays(demo_4_json_1);
@@ -854,10 +862,10 @@
                   percent = percent.toString().substring(0,5);
 
                 } else if(algorithm == "shape_context"){
-                      percent = Sketchy.shapeContextMatch(demo_4_json_1, demo_4_json_2);
-                      percent = percent.toString().substring(0,5)
+                  percent = Sketchy.shapeContextMatch(demo_4_json_1, demo_4_json_2);
+                  percent = percent.toString().substring(0,5)
                 }
-            
+
                 //eventually, this is all we'll need
                 percentStr = percent +"%"
 
@@ -895,7 +903,7 @@
                 demo_4_json_1 = demo_4_sketchpad_editor_obj_1.json();
                 //updateSimilarity();
 
-          });
+              });
 
         //nobody REALLY likes change
         demo_4_sketchpad_editor_obj_2.change(function() {
@@ -903,7 +911,7 @@
                 demo_4_json_2 = demo_4_sketchpad_editor_obj_2.json();
                 //updateSimilarity();
 
-          });
+              });
 
         //initialize button
         $("#demo_4_clear_button").click(function(){
@@ -918,168 +926,168 @@
 
 
       }//end initDemo4
-</script>
-<title>Sketchy.js</title>
-</head>
+      </script>
+      <title>Sketchy.js</title>
+    </head>
 
-<body>
+    <body>
 
 
 
-  <!-- HEADER -->
-  <div id="header_wrap" class="outer">
-    <header class="inner">
-      <a id="forkme_banner" href="">View on GitHub</a>
+      <!-- HEADER -->
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="">View on GitHub</a>
 
-      <div class="align_middle">
-        <h1 id="project_title">Sketchy.js</h1>
-        <h2 id="project_tagline">Our tagline</h2>
+          <div class="align_middle">
+            <h1 id="project_title">Sketchy.js</h1>
+            <h2 id="project_tagline">Our tagline</h2>
+          </div>
+
+          <section id="downloads">
+            <a class="zip_download_link" href="">Download this project as a .zip file</a>
+            <a class="tar_download_link" href="">Download this project as a tar.gz file</a>
+          </section>
+        </header>
       </div>
 
-      <section id="downloads">
-        <a class="zip_download_link" href="">Download this project as a .zip file</a>
-        <a class="tar_download_link" href="">Download this project as a tar.gz file</a>
-      </section>
-    </header>
-  </div>
+      <!-- MAIN CONTENT -->
+      <div id="main_content_wrap" class="outer">
+        <section id="main_content" class="inner">
+          <div class="align_middle">
+           <h3>Welcome to Sketchy.js.</h3>
+           <p>Here is some information about Sketchy.js.  It can be used to cure cancer.  Simply by reconfiguring the protons in magnets, the scientists behind Sketchy.js were able to compute the angular velocity of dinosaurs as they cross the Baltic Sea.</p>
 
-  <!-- MAIN CONTENT -->
-  <div id="main_content_wrap" class="outer">
-    <section id="main_content" class="inner">
-      <div class="align_middle">
-       <h3>Welcome to Sketchy.js.</h3>
-       <p>Here is some information about Sketchy.js.  It can be used to cure cancer.  Simply by reconfiguring the protons in magnets, the scientists behind Sketchy.js were able to compute the angular velocity of dinosaurs as they cross the Baltic Sea.</p>
-       
-       <p>Initially, the flavor of mustard was similar to that of magic potatoes.  If a tree falls in the forest, and nobody is there to hear it, does it make a noise?  Also, has anyone really been far even as decided to use even go want to do look more like?</p>
+           <p>Initially, the flavor of mustard was similar to that of magic potatoes.  If a tree falls in the forest, and nobody is there to hear it, does it make a noise?  Also, has anyone really been far even as decided to use even go want to do look more like?</p>
 
-       <p>Check out these demos below:</p>
+           <p>Check out these demos below:</p>
 
-     </div>
+         </div>
 
-     <div class="demo_wrap">
-      <div class="tab_wrap">
+         <div class="demo_wrap">
+          <div class="tab_wrap">
 
-        <div class="tab" id="tab_4">Compare Two Sketches</div>
-        <div class="tab" id="tab_2">Learn the Alphabet</div>
-        <div class="tab" id="tab_3">Solve the Equation</div>
-        <div class="tab" id="tab_1">Character Recognition</div>
-        
-      </div>
-      <div class="clear"></div>
-      <div class="demo" id="demo_1">
-        <p>Draw a letter in the box below and we'll tell you what it is!</p>
-        <p>Select an algorithm:  <select id="demo_1_algorithm"><option value="hausdorff" >Hausdorff</option><option value="shape_context">Shape Context</option></select></p>
-        <div>Draw here:</div>
-        <div id="demo_1_sketchpad_editor" class="sketchpad"></div>
-        <div class="result_box">
-          <div>Best Result:&nbsp; &nbsp;<span id="demo_1_res_text_1"></span></div>
-          <div>Similarity:&nbsp; &nbsp;<span id="demo_1_result_1" class="match_result"></span></div>
-          <br/>
-          <div>Next Best Result:&nbsp; &nbsp;<span id="demo_1_res_text_2"></span></div>
-          <div>Similarity:&nbsp; &nbsp;<span id="demo_1_result_2" class="match_result"></span></div>
-        </div>
-        <div class="clear"></div>
-        <div class="clear_button button" id="demo_1_clear_button">Clear</div>
-        <div class="done_button button" id="demo_1_submit_button">Submit</div>
+            <div class="tab" id="tab_4">Compare Two Sketches</div>
+            <div class="tab" id="tab_2">Learn the Alphabet</div>
+            <div class="tab" id="tab_3">Solve the Equation</div>
+            <div class="tab" id="tab_1">Character Recognition</div>
 
-        
-
-        <div class="clear"></div>
-      </div>
-
-      <div class="demo" id="demo_2">
-        <p>Sketchy.js can be used to teach people the alphabet</p>
-        <p>Select an algorithm:  <select id="demo_2_algorithm"><option value="hausdorff" >Hausdorff</option><option value="shape_context">Shape Context</option></select></p>
-
-        <div id="demo_2_directions">Draw the letter: <b><span id="demo_2_text">Q</span></b></div>
-
-        <div class="new_letter_button button" id="demo_2_new_letter_button">New Letter</div>
-        <div class="clear"></div>  
-        <div id="demo_2_sketchpad_editor" class="sketchpad"></div>
-        
-        <div class="clear"></div>
-        <!--<div class="done_button button" id="demo_2_done_button">Done</div>-->
-        <div class="clear_button button" id="demo_2_clear_button">Clear</div>
-        <div class="done_button button" id="demo_2_submit_button">Submit</div>
-        <div id="demo_2_accuracy" class="accuracy_box">Accuracy:&nbsp; &nbsp;<span id="demo_2_result" class="match_result"></span></div>
-        <div class="clear"></div>
-        
-
-
-      </div>
-
-      <div class="demo" id="demo_3">
-        <p>Use Sketchy.js to help teach future nerds how to do math stuffs</p>
-        <p>Select an algorithm:  <select id="demo_3_algorithm"><option value="hausdorff" >Hausdorff</option><option value="shape_context">Shape Context</option></select></p>
-        <p>Complete the equation:</p>
-        <div id="demo_3_eq"><div id="demo_3_operand_1">1</div><div id="demo_3_operator">+</div><div id="demo_3_operand_2">2</div><div>=</div><div id="demo_3_result">_</div></div>
-
-        <div class="clear"></div>
-        <div id="demo_3_sketchpad" class="sketchpad"></div>
-
-        
-        <div class="button_wrap" id="demo_3_button_wrap">
-          <div class="new_eq_button button" id="demo_3_new_button">New Equation</div> 
+          </div>
           <div class="clear"></div>
-          <div class="done_button button" id="demo_3_done_button">Submit</div>
-          <div class="clear"></div>
-          <div class="clear_button button" id="demo_3_clear_button">Clear</div>
-          
-        <div id="demo_3_answer"></div>
-          
-        </div>
+          <div class="demo" id="demo_1">
+            <p>Draw a letter in the box below and we'll tell you what it is!</p>
+            <p>Select an algorithm:  <select id="demo_1_algorithm"><option value="hausdorff" >Hausdorff</option><option value="shape_context">Shape Context</option></select></p>
+            <div>Draw here:</div>
+            <div id="demo_1_sketchpad_editor" class="sketchpad"></div>
+            <div class="result_box">
+              <div>Best Result:&nbsp; &nbsp;<span id="demo_1_res_text_1"></span></div>
+              <div>Similarity:&nbsp; &nbsp;<span id="demo_1_result_1" class="match_result"></span></div>
+              <br/>
+              <div>Next Best Result:&nbsp; &nbsp;<span id="demo_1_res_text_2"></span></div>
+              <div>Similarity:&nbsp; &nbsp;<span id="demo_1_result_2" class="match_result"></span></div>
+            </div>
+            <div class="clear"></div>
+            <div class="clear_button button" id="demo_1_clear_button">Clear</div>
+            <div class="done_button button" id="demo_1_submit_button">Submit</div>
 
-        <div class="clear"></div>
-      </div>
 
-      <div class="demo" id="demo_4">
-        <p>This is a simple example to compare two sketches</p>
-        <p>Select an algorithm:  <select id="demo_4_algorithm"><option value="hausdorff" >Hausdorff</option><option value="shape_context">Shape Context</option></select></p>
-        <div id="demo_4_content_wrap">
-          <div id="demo_4_sketchpad_1" class="sketchpad"></div>
-          <div id="demo_4_middle_col">
-            <div id="demo_4_results">
-              <!--<div class="compare_button button" id="demo_4_compare_button">Compare</div>-->
-              Similarity: <span id="demo_4_results_text"></span>
+
+            <div class="clear"></div>
+          </div>
+
+          <div class="demo" id="demo_2">
+            <p>Sketchy.js can be used to teach people the alphabet</p>
+            <p>Select an algorithm:  <select id="demo_2_algorithm"><option value="hausdorff" >Hausdorff</option><option value="shape_context">Shape Context</option></select></p>
+
+            <div id="demo_2_directions">Draw the letter: <b><span id="demo_2_text">Q</span></b></div>
+
+            <div class="new_letter_button button" id="demo_2_new_letter_button">New Letter</div>
+            <div class="clear"></div>  
+            <div id="demo_2_sketchpad_editor" class="sketchpad"></div>
+
+            <div class="clear"></div>
+            <!--<div class="done_button button" id="demo_2_done_button">Done</div>-->
+            <div class="clear_button button" id="demo_2_clear_button">Clear</div>
+            <div class="done_button button" id="demo_2_submit_button">Submit</div>
+            <div id="demo_2_accuracy" class="accuracy_box">Accuracy:&nbsp; &nbsp;<span id="demo_2_result" class="match_result"></span></div>
+            <div class="clear"></div>
+
+
+
+          </div>
+
+          <div class="demo" id="demo_3">
+            <p>Use Sketchy.js to help teach future nerds how to do math stuffs</p>
+            <p>Select an algorithm:  <select id="demo_3_algorithm"><option value="hausdorff" >Hausdorff</option><option value="shape_context">Shape Context</option></select></p>
+            <p>Complete the equation:</p>
+            <div id="demo_3_eq"><div id="demo_3_operand_1">1</div><div id="demo_3_operator">+</div><div id="demo_3_operand_2">2</div><div>=</div><div id="demo_3_result">_</div></div>
+
+            <div class="clear"></div>
+            <div id="demo_3_sketchpad" class="sketchpad"></div>
+
+
+            <div class="button_wrap" id="demo_3_button_wrap">
+              <div class="new_eq_button button" id="demo_3_new_button">New Equation</div> 
+              <div class="clear"></div>
+              <div class="done_button button" id="demo_3_done_button">Submit</div>
+              <div class="clear"></div>
+              <div class="clear_button button" id="demo_3_clear_button">Clear</div>
+
+              <div id="demo_3_answer"></div>
 
             </div>
-            <div class="done_button button" id="demo_4_done_button">Compare</div>
-            <div class="clear_button button" id="demo_4_clear_button">Clear Both</div>
+
+            <div class="clear"></div>
           </div>
-          <div id="demo_4_sketchpad_2" class="sketchpad"></div>
+
+          <div class="demo" id="demo_4">
+            <p>This is a simple example to compare two sketches</p>
+            <p>Select an algorithm:  <select id="demo_4_algorithm"><option value="hausdorff" >Hausdorff</option><option value="shape_context">Shape Context</option></select></p>
+            <div id="demo_4_content_wrap">
+              <div id="demo_4_sketchpad_1" class="sketchpad"></div>
+              <div id="demo_4_middle_col">
+                <div id="demo_4_results">
+                  <!--<div class="compare_button button" id="demo_4_compare_button">Compare</div>-->
+                  Similarity: <span id="demo_4_results_text"></span>
+
+                </div>
+                <div class="done_button button" id="demo_4_done_button">Compare</div>
+                <div class="clear_button button" id="demo_4_clear_button">Clear Both</div>
+              </div>
+              <div id="demo_4_sketchpad_2" class="sketchpad"></div>
+
+            </div>
+
+            <div class="clear"></div>
+
+
+          </div>
 
         </div>
 
-        <div class="clear"></div>
-
-
-      </div>
-
+      </section>
     </div>
 
-  </section>
-</div>
+
+
+    <div id="invisible_dataset">
+    </div>
+
+    <div id="invisible_dudes">
+      <canvas id="hiddenDude1" width="300px" height="300px"></canvas>
+      <canvas id="hiddenDude2" width="300px" height="300px"></canvas>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Sketchy.js maintained by <a href="">ffff</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
 
 
 
-<div id="invisible_dataset">
-</div>
-
-<div id="invisible_dudes">
-  <canvas id="hiddenDude1" width="300px" height="300px"></canvas>
-  <canvas id="hiddenDude2" width="300px" height="300px"></canvas>
-</div>
-
-<!-- FOOTER  -->
-<div id="footer_wrap" class="outer">
-  <footer class="inner">
-    <p class="copyright">Sketchy.js maintained by <a href="">ffff</a></p>
-    <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-  </footer>
-</div>
-
-
-
-</body>
-</html>
+  </body>
+  </html>
 

@@ -14,18 +14,17 @@
 	border-top-right-radius: 10px;
 
 	box-shadow: inset 0px -4px 9px -6px; 
-background-color:rgb(190, 206, 218);
+	background-color:rgb(190, 206, 218);
 
 
-background: #beced7; /* Old browsers */
-background: -moz-linear-gradient(top,  #beced7 1%, #77a7d1 100%); /* FF3.6+ */
-background: -webkit-gradient(linear, left top, left bottom, color-stop(1%,#beced7), color-stop(100%,#77a7d1)); /* Chrome,Safari4+ */
-background: -webkit-linear-gradient(top,  #beced7 1%,#77a7d1 100%); /* Chrome10+,Safari5.1+ */
-background: -o-linear-gradient(top,  #beced7 1%,#77a7d1 100%); /* Opera 11.10+ */
-background: -ms-linear-gradient(top,  #beced7 1%,#77a7d1 100%); /* IE10+ */
-background: linear-gradient(to bottom,  #beced7 1%,#77a7d1 100%); /* W3C */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#beced7', endColorstr='#77a7d1',GradientType=0 ); /* IE6-9 */
-
+	background: #beced7; /* Old browsers */
+	background: -moz-linear-gradient(top,  #beced7 1%, #77a7d1 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(1%,#beced7), color-stop(100%,#77a7d1)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #beced7 1%,#77a7d1 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #beced7 1%,#77a7d1 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #beced7 1%,#77a7d1 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  #beced7 1%,#77a7d1 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#beced7', endColorstr='#77a7d1',GradientType=0 ); /* IE6-9 */
 }
 
 
@@ -77,6 +76,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#beced7', end
 .sketchpad {
 	border: 1px solid black;
 	margin: 5px;
+	background: url('../images/paper.png');
 	float: left;
 }
 
@@ -89,6 +89,8 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#beced7', end
 .clear{clear:both;}
 
 
+
+/*
 .button{
 	padding: 5px;
 	border-radius: 5px;
@@ -100,8 +102,62 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#beced7', end
 .button:hover{
 	cursor:pointer;
 	background-color: #eee;
+}*/
+
+
+    
+    
+.button {
+    float: left;
+    margin-left: 10px;
+    background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #e8ebf7), color-stop(1, #cccedb));
+    background:-moz-linear-gradient(top, #e8ebf7 5%, #cccedb 100%);
+    background:-webkit-linear-gradient(top, #e8ebf7 5%, #cccedb 100%);
+    background:-o-linear-gradient(top, #e8ebf7 5%, #cccedb 100%);
+    background:-ms-linear-gradient(top, #e8ebf7 5%, #cccedb 100%);
+    background:linear-gradient(to bottom, #e8ebf7 5%, #cccedb 100%);
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#e8ebf7', endColorstr='#cccedb',GradientType=0);
+    
+    background-color:#e8ebf7;
+    
+    -moz-border-radius:15px;
+    -webkit-border-radius:15px;
+    border-radius:15px;
+    
+    border:1px solid #333029;
+    
+    display:inline-block;
+    color:#535561;
+    font-family:arial;
+    font-size:14px;
+    font-weight:bold;
+    padding:7px 11px;
+    text-decoration:none;
+    
+    text-shadow:0px 2px 0px #ffffff;
+    
+}
+.button:hover {
+    
+    background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #cccedb), color-stop(1, #e8ebf7));
+    background:-moz-linear-gradient(top, #cccedb 5%, #e8ebf7 100%);
+    background:-webkit-linear-gradient(top, #cccedb 5%, #e8ebf7 100%);
+    background:-o-linear-gradient(top, #cccedb 5%, #e8ebf7 100%);
+    background:-ms-linear-gradient(top, #cccedb 5%, #e8ebf7 100%);
+    background:linear-gradient(to bottom, #cccedb 5%, #e8ebf7 100%);
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#cccedb', endColorstr='#e8ebf7',GradientType=0);
+    
+    cursor: pointer;
+    background-color:#cccedb;
+}
+.button:active {
+    position:relative;
+    top:1px;
 }
 
+
+
+/*
 .clear_button{
 	width: 40px;
 	margin-left: 5px;
@@ -113,7 +169,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#beced7', end
  	width: 50px;
 	margin-left: 5px;
 	padding: 3px;
- }
+ }*/
 
 
 /*******************
@@ -131,30 +187,40 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#beced7', end
  *******************/
 #demo_2_directions{
 	font-size: 1.2em;
+	float: left;
+	margin-right: 20px;
+	margin-bottom:15px;
 }
 #demo_2_text{
 	font-size: 1.3em;
 	font-weight: bold;
+	display:inline-block;
+	width: 40px;
+	margin-left: 10px;
+	/*border: 1px solid black;*/
 }
+
+
 .new_letter_button{
-	width: 100px;
-	margin-left: 5px;
+	/*width: 100px;
+	margin-left: 5px;*/
+	margin-top: 5px;
 	
  }
 
 
-#demo_2_done_button{
+/*#demo_2_done_button{
 	float: left;
 }
 
 #demo_2_clear_button{
  	float:left;
  	padding: 3px;
- }
+ }*/
 
  #demo_2_accuracy{
- 	margin-left: 5px;
- 	margin-top: 8px;
+ 	/*margin-left: 5px;
+ 	margin-top: 8px;*/
  }
 
  #demo_2 > p, #demo_2 > div{
@@ -167,6 +233,8 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#beced7', end
  	/*margin-top: 10px;*/
  	border-radius: 8px;
  	float: left;
+ 	margin-left: 15px !important;
+ 	border-bottom: 1px solid black;
  }
 
 
@@ -175,7 +243,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#beced7', end
  *******************/
 
 .new_eq_button{
-	width: 100px;
+	/*width: 100px;*/
 }
 
 #demo_3_eq{
@@ -183,6 +251,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#beced7', end
 }
 #demo_3_eq > div{
 	margin: 20px;
+	margin-top: 0px;
 	float:left;
 }
 
@@ -199,7 +268,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#beced7', end
 }
 
 #demo_3_answer {
-	width: 140px;
+	width: 200px;
 	border-radius: 8px;
 	padding: 5px;
 	margin: 10px 5px;
@@ -233,9 +302,15 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#beced7', end
 }
 
 #demo_4_results {
+	text-align: left;
 	margin-top: 60px;
-	margin-left: 20px;
+	margin-left: 35px;
 	margin-right: 20px;
+	margin-bottom: 20px;
 	border-radius: 6px;
+
+	width: 140px;
+	border-bottom: 1px solid black;
+	/*border: 1px solid black;*/
 
 }

@@ -1,0 +1,303 @@
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8' />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+  <meta name="description" content="Sketchy.js: " />
+
+  <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+  <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/styles.css">
+  <script src="json2.js"></script>
+  <!-- The // notation will not work well locally on the file:// protocol, so the local fallback will be used. -->
+  <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>-->
+  <script>window.jQuery || document.write('<script src="jquery-1.9.1.min.js"><\/script>')</script>
+		<!-- jQuery Migrate must be used... see my bug report:
+    https://github.com/ianli/raphael-sketchpad/issues/15 -->
+    <script src="jquery-migrate-1.1.1.min.js"></script>
+    <script src="raphael-min.js"></script>
+    <script src="raphael.sketchpad.js"></script>
+    <script src="../sketchy.js"></script>
+    <script src="simplify.js"></script>
+    <script src="new_dataset.js"></script>
+    <!--<script src="simplified_dataset.js"></script>-->
+
+    <script type="text/javascript">
+    var simplify_tolerance = 5.0;
+    var simplify_quality = true;
+			$(document).ready(function() { // FYI, "$(function(){" is an alias to this line
+
+        //constants for the simplify.js calls
+        
+
+        var sketchpad_editor_obj_1 = Raphael.sketchpad("sketchpad_editor_1", {
+          width: 200,
+          height: 200,
+              editing: true // default
+          });
+
+        sketchpad_editor_obj_1.change(function(){
+          $('#sketchpad_data_1').val(sketchpad_editor_obj_1.json());
+
+        });
+
+        $("#clear_button").click(function(){
+          sketchpad_editor_obj_1.clear();
+        })
+
+        $("#undo_button").click(function(){
+          sketchpad_editor_obj_1.undo();
+        })
+
+        var sketchpad_editor_obj_2 = Raphael.sketchpad("sketchpad_editor_2", {
+          width: 200,
+          height: 200,
+              editing: false // default
+            });
+
+        //handle the simplify button (at the top)
+        $("#simplify_button").click(function(){         
+            //convert to point array
+            var pArr = Sketchy.convertSVGtoPointArrays(sketchpad_editor_obj_1.json());
+
+            //simplify
+            var simpArr = new Array();
+            for(j=0; j<pArr.length;j++){
+              simpArr.push(simplify(pArr[j], simplify_tolerance, simplify_quality));
+            }
+            console.log(simpArr)
+            //convert back
+            var jsObj = Sketchy.convertPointArraysToSVG(simpArr);
+            //show changes
+            sketchpad_editor_obj_2.json(jsObj);
+            $('#sketchpad_data_2').val(sketchpad_editor_obj_2.json());
+
+          });
+
+        //merge the whole dataset
+        var combinedArray = NUMBERS.concat(ALL_LETTERS.concat(OPERATIONS))
+        //make sketchpads for each symbol
+        var raphObjs = createSketchpads(combinedArray, "all_before")
+        //convert from JSON to point arrays
+        var ptArrs = massConvertJSONtoArray(raphObjs);
+        //run simplify.js on each point array
+        var simpifiedArrays = simplifyArray(ptArrs);
+        //convert back to JSON from point arrays
+        var jsonObjs = massConvertArraytoJSON(simpifiedArrays);
+
+        //make sketchpads for the revised symbols
+        //createSketchpads(jsonObjs, "all_after"); //don't care about the return since they're raphael objs
+
+        /*
+        //these blocks are used to just populate parts of the datasets
+        //show the numbers
+        var numObjs = createSketchpads(NUMBERS, "numbers")
+        var numArrs = massConvertJSONtoArray(numObjs);
+        var numSimp = simplifyArray(numArrs);
+        NUMBERS_after = massConvertArraytoJSON(numSimp);
+        var numObjs = createSketchpads(NUMBERS_after, "numbers_after")
+
+        //show all letters (uppercase)
+        var numObjs = createSketchpads(UPPERCASE_LETTERS, "lowercase_before")
+        var numArrs = massConvertJSONtoArray(numObjs);
+        var numSimp = simplifyArray(numArrs);
+        NUMBERS_after = massConvertArraytoJSON(numSimp);
+        var numObjs = createSketchpads(NUMBERS_after, "lowercase_after")
+
+        //show the operators
+        var numObjs = createSketchpads(OPERATIONS, "oper_before")
+        var numArrs = massConvertJSONtoArray(numObjs);
+        var numSimp = simplifyArray(numArrs);
+        NUMBERS_after = massConvertArraytoJSON(numSimp);
+        var numObjs = createSketchpads(NUMBERS_after, "oper_after")
+
+        */
+
+
+        /*
+        //Use this loop to print out the objects to the console for copy/pasting to dataset.js/simplified_dataset.js
+        for(i = 0; i<NUMBERS_after.length; i++){
+          console.log(JSON.stringify(NUMBERS_after[i]))
+        }
+        */
+      });
+
+      //create a bunch of sketchpads using
+      // jsonArray - array of json objects
+      // divName - a parent div to put them all in
+      function createSketchpads(jsonArray, divName){
+        var objArray = new Array();
+        for(i = 0; i<jsonArray.length; i++){
+          //<div id = "divName_i" class = "sketchpad"></div>
+          newDiv = "<div id='" + divName + "_" + i +"' class='sketchpad'></div>"
+          $("#"+divName).append(newDiv);
+
+          obj = Raphael.sketchpad((divName + "_" + i), {
+            width: 200,
+            height: 200,
+            editing: true,
+            strokes: jsonArray[i]
+          });
+
+          objArray.push(obj);
+        }
+
+        $("#"+divName).append("<div class='clear'></div> ")
+        return objArray;
+      }
+
+
+      //run kyles conversion code JSON -> point array
+      //on each ele in someArr
+      function massConvertJSONtoArray(someArr){ 
+        var resArr = new Array();
+        for (i = 0; i<someArr.length; i++){
+          //console.log(someArr[i]);
+          result = Sketchy.convertSVGtoPointArrays(someArr[i].json());
+          resArr.push(result);
+        }
+        //console.log(resArr[1])
+        return resArr;
+
+      }
+
+      //run the simplify.js code on each array elt
+      function simplifyArray(someArr){
+        //console.log(someArr[0])
+        var resArr = new Array();
+        for (i = 0; i<someArr.length; i++){
+          line = new Array();
+          for(j=0; j<someArr[i].length;j++){
+            //console.log(i)
+            line.push(simplify(someArr[i][j], simplify_tolerance, simplify_quality))
+          }
+          resArr.push(line);
+        }
+        return resArr;
+      }
+
+      //run kyles conversion code points array -> JSON 
+      //on each ele in someArr
+      function massConvertArraytoJSON(someArr){ 
+        //console.log(someArr[0])
+        var resArr = new Array();
+        for (i = 0; i<someArr.length; i++){
+          result =Sketchy.convertPointArraysToSVG(someArr[i]);
+          resArr.push(JSON.parse(result))
+        }
+        return resArr;
+      }
+
+
+
+
+
+      </script>
+      <title>Fix dataset</title>
+    </head>
+
+    <body>
+
+
+
+      <!-- HEADER -->
+      <!--
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="">View on GitHub</a>
+
+          <div class="align_middle">
+            <h1 id="project_title">Sketchy.js</h1>
+            <h2 id="project_tagline">Our tagline</h2>
+          </div>
+
+          <section id="downloads">
+            <a class="zip_download_link" href="">Download this project as a .zip file</a>
+            <a class="tar_download_link" href="">Download this project as a tar.gz file</a>
+          </section>
+        </header>
+      </div>
+
+-->
+      <!-- MAIN CONTENT -->
+      <div id="main_content_wrap" class="outer">
+        <section id="main_content" class="inner">
+          <div class="align_middle" style="width: 1100px">
+           <p>Opening this file means you've simplified our dataset</p>
+           <p>As in, every symbol in dataset.js has been run through simplify.js, and the before/after sketchpads are shown below.</p>
+           <p>By default, nothing is done with these simplified symbols, so if you want to do anything, print the objects to the console and copy/paste them to the dataset file</p>
+
+           <p>Draw in the left one, click simplify, observe</p>
+
+           <div style="float:left">
+             <div id="sketchpad_editor_1" class="sketchpad"></div>
+
+             <form action="" method="post" onsubmit="return false;">
+              <textarea id="sketchpad_data_1" name="input1"  rows=8 cols=20></textarea>
+            </form>
+
+            <div  id="clear_button" class="button" style="width: 70px; float: left; margin-left: 30px">clear</div>
+            <div  id="undo_button"class="button" style="width: 70px; float: left;margin-left: 5px;">undo</div>
+            <div id="simplify_button" style="width: 70px; float: left;margin-left: 5px;" class="button">simplify</div>
+          </div>
+          <div style="float:left">      
+            <div id="sketchpad_editor_2" class="sketchpad"></div>
+            <form action="" method="post" onsubmit="return false;">
+              <textarea id="sketchpad_data_2" name="input1"  rows=8 cols=20></textarea>
+            </form>
+
+          </div>
+          <div class="clear"></div>   
+
+
+          <p>All Symbols: (before)</p>
+          <div id="all_before"></div>
+          <!--<p>All Symbols: (after)</p>
+          <div id="all_after"></div>-->
+<!--
+       <p>Numbers: (Before)</p>
+       <div id="numbers"></div>
+        <p>Numbers: (After)</p>
+       <div id="numbers_after"></div>
+       <div class="clear"></div>  
+
+       <p>Letters: (before)</p>
+       <div id="lowercase_before"></div>
+       <p>Leters: (after)</p>
+       <div id="lowercase_after"></div>
+
+
+       <p>Operations: (before)</p>
+       <div id="oper_before"></div>
+       <p>Operations: (after)</p>
+       <div id="oper_after"></div>
+     
+
+
+     -->
+   </div><!-- end middle align section -->
+
+
+
+
+
+ </div>
+
+</section>
+</div>
+
+<!-- FOOTER  -->
+<div id="footer_wrap" class="outer">
+  <footer class="inner">
+    <p class="copyright">Sketchy.js maintained by <a href="">ffff</a></p>
+    <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+  </footer>
+</div>
+
+
+
+</body>
+</html>
+

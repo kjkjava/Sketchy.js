@@ -61,7 +61,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#beced7', end
 	box-shadow: 10px 10px 25px #888888;
 }
 .demo_wrap{
-	height: 600px;
+	height: 760px;
 	width: 900px;
 	max-width: 900px;
 	margin: 0 auto;
@@ -94,6 +94,8 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#beced7', end
 	border-radius: 5px;
 	border: 1px solid black;
 	background: #fff;
+	float: left;
+	margin: 10px;
 }
 .button:hover{
 	cursor:pointer;
@@ -106,6 +108,13 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#beced7', end
 	padding: 3px;
 	
 }
+
+ .done_button{
+ 	width: 50px;
+	margin-left: 5px;
+	padding: 3px;
+ }
+
 
 /*******************
  * Demo 1 Styles 
@@ -133,22 +142,19 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#beced7', end
 	
  }
 
- .done_button{
- 	width: 50px;
-	margin-left: 5px;
-	padding: 3px;
- }
+
 #demo_2_done_button{
 	float: left;
 }
 
- #demo_2_clear_button{
+#demo_2_clear_button{
  	float:left;
  	padding: 3px;
  }
 
  #demo_2_accuracy{
  	margin-left: 5px;
+ 	margin-top: 8px;
  }
 
  #demo_2 > p, #demo_2 > div{
@@ -221,8 +227,13 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#beced7', end
 	width: 100px;
 }
 
+#demo_4_done_button{
+	margin-left: 40px;
+	width: 100px;
+}
+
 #demo_4_results {
-	margin-top: 90px;
+	margin-top: 60px;
 	margin-left: 20px;
 	margin-right: 20px;
 	border-radius: 6px;

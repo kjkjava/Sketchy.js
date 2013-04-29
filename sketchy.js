@@ -98,7 +98,8 @@
     var pointsPerShape = 50, // constant
         points1, points2,
 
-        distanceBinSmallest = 0.125, distanceBinCount = 5,
+        // original bin size... 0.125
+        distanceBinSmallest = 0.25, distanceBinCount = 5,
         distanceMatrix1, distanceTotal1, distanceMean1, distanceBins1,
         distanceMatrix2, distanceTotal2, distanceMean2, distanceBins2,
 

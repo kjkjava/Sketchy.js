@@ -98,8 +98,8 @@
     var pointsPerShape = 50, // constant
         points1, points2,
 
-        // original bin size... 0.125
-        distanceBinSmallest = 0.25, distanceBinCount = 5,
+        // 0.125 gives a bin out to points 2x the average
+        distanceBinSmallest = 0.125, distanceBinCount = 5,
         distanceMatrix1, distanceTotal1, distanceMean1, distanceBins1,
         distanceMatrix2, distanceTotal2, distanceMean2, distanceBins2,
 
@@ -149,7 +149,9 @@
     distanceMean1 = distanceTotal1/Math.pow(pointsPerShape,2);
     distanceMean2 = distanceTotal2/Math.pow(pointsPerShape,2);
 
-    // Normalize by the mean distance
+    // Normalize by the mean distance.  This achieves scale invariance.
+    // Translation invariance is inherant to the fact that distance
+    // measurements are made relative to each point.
     for(i=0; i<pointsPerShape; i++) {
       for(j=0; j<pointsPerShape; j++) {
         distanceMatrix1[i][j] /= distanceMean1;
@@ -248,7 +250,7 @@
         costMatrix[i][j] = 1/2 * ksum;
       }
     }
-    return Sketchy.hungarian(costMatrix);
+    return Sketchy.hungarian(costMatrix, false, true);
   };
 
   // Sums up the number of points (relative to point pointIndex) in a particular
@@ -532,55 +534,40 @@
   // Hungarian Algorithm
 
   Sketchy.hungarian = (function() {
-    // Takes in a 2D array and finds the largest element
-    // This is used in the Hungarian algorithm if the user chooses "max"
-    // (indicating their matrix values represent profit) so that cost values
-    // are subtracted from the largest value.
-    function findLargest(matrix) {
-      var i, j, largest = Number.MIN_VALUE;
-      for(i=0; i<matrix.length; i++) {
-        for(j=0; j<matrix[i].length; j++) {
-          if(matrix[i][j] > largest) {
-            largest = matrix[i][j];
-          }
-        }
-      }
-      return largest;
-    }
+    // Expose just the hgAlgorithm method
+    // Usage: hungarian(matrix, [isProfitMatrix=false], [returnSum=false])
+    return hgAlgorithm;
 
-    // Copies all elements of a 2D array to a new array
-    function copyOf(original) {
-      var i, j,
-          copy = [];
-
-      for(i=0; i<original.length; i++) {
-        copy[i] = [];
-        for(j=0; j<original[i].length; j++) {
-          copy[i][j] = original[i][j];
-        }
-      }
-
-      return copy;
-    }
-
-    // sumType is optional, but if it exists and is "max," the costs will
-    // be treated as profits
-    function hgAlgorithm(matrix, sumType) {
+    // isProfitMatrix is optional, but if it exists and is the value
+    // true, the costs will be treated as profits
+    // returnSum is also optional, but will
+    // sum up the chosen costs/profits and return that instead
+    // of the assignment matrix.
+    function hgAlgorithm(matrix, isProfitMatrix, returnSum) {
       var cost, maxWeight, i, j,
-        mask = [], // the mask array: [matrix.length] x [matrix[0].length]
-        rowCover = [], // the row covering vector: [matrix.length]
-        colCover = [], // the column covering vector: [matrix[0].length]
-        zero_RC = [0,0], // position of last zero from Step 4: [2]
-        path = [], // [matrix.length * matrix[0].length + 2] x [2]
-        step = 1,
-        done = false,
-        assignment = []; // [matrix.length] x [2]
+          mask = [], // the mask array: [matrix.length] x [matrix[0].length]
+          rowCover = [], // the row covering vector: [matrix.length]
+          colCover = [], // the column covering vector: [matrix[0].length]
+          zero_RC = [0,0], // position of last zero from Step 4: [2]
+          path = [], // [matrix.length * matrix[0].length + 2] x [2]
+          step = 1,
+          done = false,
+          // Number.MAX_VALUE causes overflow on profits.
+          // Should be larger or smaller than all matrix values. (i.e. -1 or 999999)
+          forbiddenValue = -1, 
+          assignments = [],
+          assignmentsSeen; // [matrix.length] x [2]
 
-
-      // Create the cost matrix
+      // Create the cost matrix, so we can work without modifying the
+      // original input.
       cost = copyOf(matrix);
 
-      if(sumType && sumType.toLowerCase() === "max") {
+      // If it's a rectangular matrix, pad it with a forbidden value (MAX_VALUE).
+      // Whether they are chosen first or last (profit or cost, respectively)
+      // should not matter, as we will not include assignments out of range anyway.
+      makeSquare(cost, forbiddenValue);
+
+      if(isProfitMatrix === true) {
         maxWeight = findLargest(cost);
         for(i=0; i<cost.length; i++) {
           for(j=0; j<cost[i].length; j++) {
@@ -590,23 +577,25 @@
       }
 
       // Initialize the 1D arrays with zeros
-      for(i=0; i<matrix.length; i++) {
+      for(i=0; i<cost.length; i++) {
         rowCover[i] = 0;
       }
-      for(j=0; j<matrix[0].length; j++) {
+      for(j=0; j<cost[0].length; j++) {
         colCover[j] = 0;
       }
 
       // Initialize the inside arrays to make 2D arrays
       // Fill with zeros
-      for(i=0; i<matrix.length; i++) {
+      for(i=0; i<cost.length; i++) {
         mask[i] = [];
-        for(j=0; j<matrix[0].length; j++) {
+        for(j=0; j<cost[0].length; j++) {
           mask[i][j] = 0;
         }
-        assignment[i] = [0,0];
       }
-      for(i=0; i<(matrix.length * matrix[0].length + 2); i++) {
+      for(i=0; i<Math.min(matrix.length, matrix[0].length); i++) {
+        assignments[i] = [0,0];
+      }
+      for(i=0; i<(cost.length * cost[0].length + 2); i++) {
         path[i] = [];
       }
 
@@ -637,26 +626,32 @@
         }
       }
 
+      // In an input matrix taller than it is wide, the first assignment
+      // column will have to skip some numbers, so the index will not
+      // always match the first column.
+      assignmentsSeen = 0;
       for(i=0; i<mask.length; i++) {
         for(j=0; j<mask[i].length; j++) {
-          if(mask[i][j] === 1) {
-            assignment[i][0] = i;
-            assignment[i][1] = j;
+          if(i < matrix.length && j < matrix[0].length && mask[i][j] === 1) {
+            assignments[assignmentsSeen][0] = i;
+            assignments[assignmentsSeen][1] = j;
+            assignmentsSeen++;
           }
         }
       }
 
-      // If you want to return the min or max sum instead of the assignment
-      // array, use the following code (or use this code on the return value)
-      // outside of this function):
-
-      var sum = 0;
-      for(i=0; i<assignment.length; i++) {
-        sum = sum + matrix[assignment[i][0]][assignment[i][1]];
+      if(returnSum === true) {
+          // If you want to return the min or max sum instead of the assignment
+          // array, set the returnSum argument (or use this
+          // code on the return value outside of this function):
+        var sum = 0;
+        for(i=0; i<assignments.length; i++) {
+          sum = sum + matrix[assignments[i][0]][assignments[i][1]];
+        }
+        return sum;
+      } else {
+        return assignments;
       }
-      return sum;
-
-      // return assignment;
     }
 
     function hg_step1(step, cost) {
@@ -673,7 +668,7 @@
           }
         }
         for(j=0; j<cost[i].length; j++) {
-          cost[i][j] = cost[i][j] - minVal;
+          cost[i][j] -= minVal;
         }
       }
 
@@ -720,7 +715,7 @@
       // Check if all columns are covered
       count = 0;
       for(j=0; j<colCover.length; j++) {
-        count = count + colCover[j];
+        count += colCover[j];
       }
 
       // Should be cost.length, but okay, because mask has same dimensions
@@ -740,8 +735,8 @@
       // Step 6.  If not, save location of primed zero and go to Step 5.
 
       var row_col = [0,0], // size: 2, holds row and column of uncovered zero
-        done = false,
-        j, starInRow;
+          done = false,
+          j, starInRow;
 
       while(!done) {
         row_col = findUncoveredZero(row_col, cost, rowCover, colCover);
@@ -955,10 +950,66 @@
       return minVal;
     }
 
-    // Expose just the hgAlgorithm method
-    // Example call: hungarian(matrix)
-    // Or pass hungarian(matrix, "max") if it's a profit matrix instead of cost
-    return hgAlgorithm;
-  })(this);
+    // Takes in a 2D array and finds the largest element
+    // This is used in the Hungarian algorithm if the user chooses "max"
+    // (indicating their matrix values represent profit) so that cost values
+    // are subtracted from the largest value.
+    function findLargest(matrix) {
+      var i, j, largest = Number.MIN_VALUE;
+      for(i=0; i<matrix.length; i++) {
+        for(j=0; j<matrix[i].length; j++) {
+          if(matrix[i][j] > largest) {
+            largest = matrix[i][j];
+          }
+        }
+      }
+      return largest;
+    }
+
+    // Copies all elements of a 2D array to a new array
+    function copyOf(original) {
+      var i, j,
+      copy = [];
+
+      for(i=0; i<original.length; i++) {
+        copy[i] = [];
+        for(j=0; j<original[i].length; j++) {
+          copy[i][j] = original[i][j];
+        }
+      }
+
+      return copy;
+    }
+
+    // Makes a rectangular matrix square by padding it with some value
+    // This modifies the matrix argument directly instead of returning a copy
+    function makeSquare(matrix, padValue) {
+      var rows = matrix.length,
+      cols = matrix[0].length,
+      i, j;
+
+      if(rows === cols) {
+        // The matrix is already square.
+        return;
+      } else if(rows > cols) {
+        // Pad on some extra columns on the right.
+        for(i=0; i<rows; i++) {
+          for(j=cols; j<rows; j++) {
+            matrix[i][j] = padValue;
+          }
+        }
+      } else if(rows < cols) {
+        // Pad on some extra rows at the bottom.
+        for(i=rows; i<cols; i++) {
+          matrix[i] = [];
+          for(j=0; j<cols; j++) {
+            matrix[i][j] = padValue;
+          }
+        }
+      }
+      // None of the above cases may execute if there is a problem with the input matrix.
+    }
+
+  })();
 
 })(this);

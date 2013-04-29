@@ -204,8 +204,12 @@
     for(i=0; i<pointsPerShape-1; i++) {
       for(j=i+1; j<pointsPerShape; j++) {
         // Adding 2pi and modding by 2pi changes the -pi to pi range to a 0 to 2pi range
-        angleMatrix1[i][j] = angleMatrix1[j][i] = (Math.atan2(points1[j].y - points1[i].y, points1[j].x - points1[i].x) + 2*Math.PI) % (2*Math.PI);
-        angleMatrix2[i][j] = angleMatrix2[j][i] = (Math.atan2(points2[j].y - points2[i].y, points2[j].x - points2[i].x) + 2*Math.PI) % (2*Math.PI);
+        angleMatrix1[i][j] = (Math.atan2(points1[j].y - points1[i].y, points1[j].x - points1[i].x) + 2*Math.PI) % (2*Math.PI);
+        angleMatrix2[i][j] = (Math.atan2(points2[j].y - points2[i].y, points2[j].x - points2[i].x) + 2*Math.PI) % (2*Math.PI);
+
+        // The matrix is somewhat mirrored over the diagonal, but angles must be flipped around
+        angleMatrix1[j][i] = (angleMatrix1[i][j] + Math.PI) % (2*Math.PI);
+        angleMatrix2[j][i] = (angleMatrix2[i][j] + Math.PI) % (2*Math.PI);
       }
     }
 
@@ -218,10 +222,11 @@
     }
 
     // Compute the angle bins
+    // TODO: save efficiency by automatically calculating mirror by adding angleBinCount/2 then modding by angleBinCount?
     for(i=0; i<pointsPerShape; i++) {
       for(j=0; j<pointsPerShape; j++) {
-        angleBins1[i][j] = angleBins1[j][i] = 1+Math.floor(angleMatrix1[i][j]/(2*Math.PI/angleBinCount));
-        angleBins2[i][j] = angleBins2[j][i] = 1+Math.floor(angleMatrix2[i][j]/(2*Math.PI/angleBinCount));
+        angleBins1[i][j] = 1+Math.floor(angleMatrix1[i][j]/(2*Math.PI/angleBinCount));
+        angleBins2[i][j] = 1+Math.floor(angleMatrix2[i][j]/(2*Math.PI/angleBinCount));
       }
     }
 

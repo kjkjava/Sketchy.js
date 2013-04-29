@@ -87,6 +87,9 @@
         //convert back to JSON from point arrays
         var jsonObjs = massConvertArraytoJSON(simpifiedArrays);
 
+
+        //getBetimWhatHeWants(ptArrs);
+
         //make sketchpads for the revised symbols
         //createSketchpads(jsonObjs, "all_after"); //don't care about the return since they're raphael objs
 
@@ -123,6 +126,46 @@
         }
         */
       });
+
+      function getBetimWhatHeWants(ptArr){
+        var xmin, xmax, ymin, ymax;
+        var res = Array();
+        for(i=0; i<ptArr.length; i++){
+          //console.log(ptArr[i])
+          xmin = Number.MAX_VALUE, xmax = Number.MIN_VALUE
+          ymin = Number.MAX_VALUE, ymax = Number.MIN_VALUE
+          for(j=0;j<ptArr[i].length; j++){
+              //obArr = ptArr[i][j];
+              //console.log("pt: " + pt)
+            for(k=0;k<ptArr[i][j].length; k++){
+              pt = ptArr[i][j][k];
+              x = pt.x;
+              y = pt.y;
+              if(x < xmin){
+                xmin = x;
+              }
+              if(x > xmax){
+                xmax = x;
+              }
+              if(y< ymin){
+                ymin = y;
+              }
+              if(y>ymax){
+                ymax = y;
+              }
+              //console.log("pt: " + pt)
+              //console.log("x: " + x + ", y: " + y)
+            }
+            //console.log(ptArr[i][j])
+          }
+          obj = [xmin, xmax, ymin, ymax]
+          //console.log(obj)
+          //add values to result
+          res.push(obj);
+        }
+        //res
+        return res
+      };
 
       //create a bunch of sketchpads using
       // jsonArray - array of json objects

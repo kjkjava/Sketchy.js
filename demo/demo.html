@@ -110,7 +110,7 @@ function generateDataset(){
         //merge the whole dataset
         var combinedArray = NUMBERS.concat(ALL_LETTERS.concat(OPERATIONS))
         //make sketchpads for each symbol
-        var raphObjs = createSketchpads(combinedArray, "invisible_dataset")
+        //var raphObjs = createSketchpads(combinedArray, "invisible_dataset")
         
 
       }//end generateDataset
@@ -141,7 +141,9 @@ function generateDataset(){
                 var jsontext = sketchpad_editor_obj_1.json();
                 rand = Math.random(jsontext);
                 percent = Math.round(rand*10000)/100
-                percentStr = percent +"%"
+                if(algorithm == "hausdorff"){
+                  percentStr = percent + "%"
+                }
 
                 /*
                 // RANDOM CODE
@@ -196,7 +198,7 @@ function generateDataset(){
                   var paths, result, json;
                   paths = Sketchy.convertSVGtoPointArrays(jsontext);
                   for (i=0; i<paths.length; i++) {
-                    paths[i] = Sketchy.distributePointsAcrossPath(paths[i], 10);
+                    paths[i] = Sketchy.distributePointsAcrossPath(paths[i], 20);
                   }
                   json = Sketchy.convertPointArraysToSVG(paths);
                   result1 = Sketchy.convertSVGtoXML(json, false);                
@@ -284,7 +286,10 @@ function generateDataset(){
                 //best match
                 percent = 100 - (Math.floor(best_match * 10000)/100)
                 percent = percent.toString().substring(0,5)
-                percentStr = percent + "%"
+                percentStr = percent;
+                if(algorithm == "hausdorff"){
+                  percentStr = percent + "%"
+                }
 
                 if(ALL_LETTERS_KEYS[best_index]!= null){
                   //update the fields
@@ -295,7 +300,10 @@ function generateDataset(){
                 //second best match
                 percent = 100 - (Math.floor(second_match * 10000)/100)
                 percent = percent.toString().substring(0,5)
-                percentStr = percent + "%"
+                percentStr = percent;
+                if(algorithm == "hausdorff"){
+                  percentStr = percent + "%"
+                }
 
                 if(ALL_LETTERS_KEYS[second_index]!= null){
                   //update the fields
@@ -324,8 +332,8 @@ function generateDataset(){
       function initDemo2(){
           //initialize editor 2
           var sketchpad_editor_obj_2= Raphael.sketchpad("demo_2_sketchpad_editor", {
-            width: 200,
-            height: 200,
+              width: 200,
+              height: 200,
               editing: true // default
             });
 
@@ -385,7 +393,7 @@ function generateDataset(){
                   var paths_1, result_1, json_1, paths_2, result_2, json_2;
                   paths_1 = Sketchy.convertSVGtoPointArrays(jsontext);
                   for (i=0; i<paths_1.length; i++) {
-                    paths_1[i] = Sketchy.distributePointsAcrossPath(paths_1[i], 10);
+                    paths_1[i] = Sketchy.distributePointsAcrossPath(paths_1[i], 20);
                   }
                   json_1 = Sketchy.convertPointArraysToSVG(paths_1);
                   result_1 = Sketchy.convertSVGtoXML(json_1, false);                
@@ -430,8 +438,10 @@ function generateDataset(){
                   percent = percent.toString().substring(0,5)
                 }
 
-
-                percentStr = percent +"%"
+                percentStr = percent
+                if(algorithm == "hausdorff"){
+                  percentStr = percent + "%"
+                }
                 console.log("Result: " + percent);
 
                 //check for empty sketchpad
@@ -446,7 +456,7 @@ function generateDataset(){
                 
                 //Change colors based on percent
                 if(algorithm=="hausdorff"){
-                  if(percent > 60){
+                  if(percent > 65){
                     $("#demo_2_accuracy").css("background-color", "#75FF75");
                   } else if (percent > 40){
                     $("#demo_2_accuracy").css("background-color", "#FFAD5C");
@@ -508,7 +518,7 @@ function generateDataset(){
           $('#demo_3_answer').hide();
 
           //set some threshold to determine whether they drew the right number
-          var accuracy_threshold = 55; //55%
+          var accuracy_threshold = 60; //55%
 
           
 
@@ -696,7 +706,7 @@ function generateDataset(){
               var paths_1, result_1, json_1, paths_2, result_2, json_2;
               paths_1 = Sketchy.convertSVGtoPointArrays(jsontext);
               for (i=0; i<paths_1.length; i++) {
-                paths_1[i] = Sketchy.distributePointsAcrossPath(paths_1[i], 10);
+                paths_1[i] = Sketchy.distributePointsAcrossPath(paths_1[i], 20);
               }
               json_1 = Sketchy.convertPointArraysToSVG(paths_1);
               result_1 = Sketchy.convertSVGtoXML(json_1, false);                
@@ -716,7 +726,7 @@ function generateDataset(){
                   percent = 100 - (Math.floor(percent * 10000)/100);
                   percent = percent.toString().substring(0,5)
                   percentStr = "    (" + percent + "% match)"
-                if(percent > accuracy_threshold){  //55%
+                if(percent > accuracy_threshold){  //60%
                   setAnswer(true, percentStr);
                 } else {
                   setAnswer(false, percentStr);
@@ -725,7 +735,7 @@ function generateDataset(){
               } else if(algorithm == "shape_context"){
                 percent = Sketchy.shapeContextMatch(jsontext, JSON.stringify(some_number_shape));
                 percent = percent.toString().substring(0,5)
-                percentStr = "    (" + percent + "% wrong)"
+                percentStr = "    (" + percent + " wrong)"
 
                   if(percent < 16){  //55%
                     setAnswer(true, percentStr);
@@ -770,11 +780,7 @@ function generateDataset(){
           demo_3_sketchpad_editor_obj.change(function() {
             jsontext = demo_3_sketchpad_editor_obj.json();
 
-              //compare their drawing to every number
-
-              //if we find a number that matches, above the threshold
-              //set the answer
-            });
+          });
 
           //set up buttons
           $('#demo_3_clear_button').click(function(){
@@ -838,7 +844,7 @@ function generateDataset(){
                   var paths_1, result_1, json_1, paths_2, result_2, json_2;
                   paths_1 = Sketchy.convertSVGtoPointArrays(demo_4_json_1);
                   for (i=0; i<paths_1.length; i++) {
-                    paths_1[i] = Sketchy.distributePointsAcrossPath(paths_1[i], 10);
+                    paths_1[i] = Sketchy.distributePointsAcrossPath(paths_1[i], 20);
                   }
                   json_1 = Sketchy.convertPointArraysToSVG(paths_1);
                   result_1 = Sketchy.convertSVGtoXML(json_1, false);                
@@ -848,7 +854,7 @@ function generateDataset(){
 
                   paths_2 = Sketchy.convertSVGtoPointArrays(demo_4_json_2);
                   for (i=0; i<paths_2.length; i++) {
-                    paths_2[i] = Sketchy.distributePointsAcrossPath(paths_2[i], 10);
+                    paths_2[i] = Sketchy.distributePointsAcrossPath(paths_2[i], 20);
                   }
                   json_2 = Sketchy.convertPointArraysToSVG(paths_2);
                   result_2 = Sketchy.convertSVGtoXML(json_2, false);                
@@ -867,7 +873,10 @@ function generateDataset(){
                 }
 
                 //eventually, this is all we'll need
-                percentStr = percent +"%"
+                percentStr = percent;
+                if(algorithm == "hausdorff"){
+                  percentStr = percent + "%"
+                }
 
                 //check for empty sketchpads
                 if (demo_4_json_1 == "[]" || demo_4_json_2 == "[]" ){
@@ -893,6 +902,7 @@ function generateDataset(){
 
         //bind the done button to the proper action
         $("#demo_4_done_button").click(function(){
+          $("#demo_4_results").css("background-color", "#FFFFFF");
           updateSimilarity();
         });
 
@@ -941,7 +951,7 @@ function generateDataset(){
 
           <div class="align_middle">
             <h1 id="project_title">Sketchy.js</h1>
-            <h2 id="project_tagline">Our tagline</h2>
+            <h2 id="project_tagline">Simple shape matching</h2>
           </div>
 
           <section id="downloads">
@@ -956,9 +966,12 @@ function generateDataset(){
         <section id="main_content" class="inner">
           <div class="align_middle">
            <h3>Welcome to Sketchy.js.</h3>
-           <p>Here is some information about Sketchy.js.  It can be used to cure cancer.  Simply by reconfiguring the protons in magnets, the scientists behind Sketchy.js were able to compute the angular velocity of dinosaurs as they cross the Baltic Sea.</p>
 
-           <p>Initially, the flavor of mustard was similar to that of magic potatoes.  If a tree falls in the forest, and nobody is there to hear it, does it make a noise?  Also, has anyone really been far even as decided to use even go want to do look more like?</p>
+           <p>Sketchy.js is a javscript library that can be used to do simple shape matching.</p>
+           <p>Our goal is to compare two shapes and assign a value based on their similarity.  Are they exactly the same?  100%.  Perfectly different?  0%.  Vaguely-put, we consider a shape to be a 2D image made up of contours.  Think of outlines, silhouettes, sketches, et cetera.  This means that in most cases, texture, color, and even gray values are not relevant.</p>
+           <p>Currently, two algorithms have been implemented:<br>  -Hausdorff Distance<br>  -Shape Context Matching</p>
+
+           
 
            <p>Check out these demos below:</p>
 
@@ -996,7 +1009,7 @@ function generateDataset(){
           </div>
 
           <div class="demo" id="demo_2">
-            <p>Sketchy.js can be used to teach people the alphabet</p>
+            <p>Sketchy.js can be used to help people practice drawing letters.  This example could pair well with a pen-based tablet.</p>
             <p>Select an algorithm:  <select id="demo_2_algorithm"><option value="hausdorff" >Hausdorff</option><option value="shape_context">Shape Context</option></select></p>
 
             <div id="demo_2_directions">Draw the letter: <b><span id="demo_2_text">Q</span></b></div>
@@ -1017,7 +1030,7 @@ function generateDataset(){
           </div>
 
           <div class="demo" id="demo_3">
-            <p>Use Sketchy.js to help teach future nerds how to do math stuffs</p>
+            <p>In this example, the user must simply complete the equation.  Equations are randomly gererated and then validated to ensure there's no ambiguity and that the equation is easy to solve.</p>
             <p>Select an algorithm:  <select id="demo_3_algorithm"><option value="hausdorff" >Hausdorff</option><option value="shape_context">Shape Context</option></select></p>
             <p>Complete the equation:</p>
             <div id="demo_3_eq"><div id="demo_3_operand_1">1</div><div id="demo_3_operator">+</div><div id="demo_3_operand_2">2</div><div>=</div><div id="demo_3_result">_</div></div>
@@ -1041,7 +1054,7 @@ function generateDataset(){
           </div>
 
           <div class="demo" id="demo_4">
-            <p>This is a simple example to compare two sketches</p>
+            <p>This demo can be used to show off the power of both algorithms.  Simply draw something in each box and Sketchy.js will compute how similar the two drawings are.</p>
             <p>Select an algorithm:  <select id="demo_4_algorithm"><option value="hausdorff" >Hausdorff</option><option value="shape_context">Shape Context</option></select></p>
             <div id="demo_4_content_wrap">
               <div id="demo_4_sketchpad_1" class="sketchpad"></div>
@@ -1081,7 +1094,7 @@ function generateDataset(){
     <!-- FOOTER  -->
     <div id="footer_wrap" class="outer">
       <footer class="inner">
-        <p class="copyright">Sketchy.js maintained by <a href="">ffff</a></p>
+        <p class="copyright">Sketchy.js maintained by <a href="">Kyle and Friends</a></p>
         <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
       </footer>
     </div>

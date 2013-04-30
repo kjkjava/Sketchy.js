@@ -95,7 +95,7 @@
 
   // shape1 and shape2 should be stringified JSON data from Raphael SketchPad
   Sketchy.shapeContextMatch = function(shape1, shape2) {
-    var pointsPerShape = 50, // constant
+    var pointsPerShape = 25, // constant... 25 is pretty fast... 50 is probably best
         points1, points2,
 
         // 0.125 gives a bin out to points 2x the average

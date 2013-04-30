@@ -65,7 +65,7 @@
 				$("#buttonScatterPoints").click(function() {
 					var paths, result, json;
 					paths = Sketchy.convertSVGtoPointArrays(sketchpad_editor_1.json());
-					result = Sketchy.scatterPoints(paths, 50);
+					result = Sketchy.scatterPoints(paths, 25);
 					json = Sketchy.convertPointArraysToSVG([result]);
 					sketchpad_editor_2.json(json);
 				});

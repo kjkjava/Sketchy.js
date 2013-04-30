@@ -33,7 +33,7 @@
         ///////////////////
 
         //set the first demo to be displayed
-        demoNum = "1"  //change this back to 1 when done
+        demoNum = "4"  //change this back to 1 when done
 
         //display the first demo by default
         $('#demo_' + demoNum).show();
@@ -464,7 +464,7 @@ function generateDataset(){
 
                 
                 //Change colors based on percent
-                if(algorithm=="hausdorff"){
+                if(algorithm=="hausdorff" || algorithm=="shape_context"){
                   if(percent > 65){
                     $("#demo_2_accuracy").css("background-color", "#75FF75");
                   } else if (percent > 40){
@@ -627,9 +627,9 @@ function generateDataset(){
             }
 
 
-            //don't make the user draw a division sign
+            //don't make the user draw a division sign, or multiplication
             //  3 ___ 1 = 3
-            if(solve == 1 && op == "÷"){
+            if(solve == 1 && (op == "÷" || op== "×") ){
               return false;
             }
 
@@ -747,7 +747,7 @@ function generateDataset(){
                 percent = percent.toString().substring(0,5)
                 percentStr = "    (" + percent + "% match)"
 
-                  if(percent > 60){  //55%
+                  if(percent > 62){  //55%
                     setAnswer(true, percentStr);
                   } else {
                     setAnswer(false, percentStr);
@@ -896,7 +896,7 @@ function generateDataset(){
 
                 
                 //Apply colors based on the result
-                if(algorithm=="hausdorff"){
+                if(algorithm=="hausdorff" || algorithm=="shape_context"){
                   if(percent > 70){
                     $("#demo_4_results").css("background-color", "#75FF75");
                   } else if (percent > 50){
@@ -1102,8 +1102,10 @@ function generateDataset(){
     <!-- FOOTER  -->
     <div id="footer_wrap" class="outer">
       <footer class="inner">
+        <div class="align_middle">
         <p class="copyright">Sketchy.js maintained by <a href="https://github.com/kjkjava">kjkjava</a></p>
         <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </div>
       </footer>
     </div>
 

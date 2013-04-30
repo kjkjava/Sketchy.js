@@ -257,7 +257,10 @@
     result = Sketchy.hungarian(costMatrix, false, true) / pointsPerShape;
 
     // Convert total error to a percentage
-    result = Math.exp(-1.9 * result);
+    // Modify the constant below (originally 0.175) to modify how sensitive
+    // this function is to error.  Higher numbers make it more forgiving.
+    // Note: this is Gaussian function.
+    result = Math.exp(-((result*result)/0.175));
 
     return result;
   };

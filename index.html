@@ -6,7 +6,7 @@
 <head>
   <meta charset='utf-8' />
   <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-  <meta name="description" content="Sketchy.js : Shape matching for mere mortals." />
+  <meta name="description" content="Sketchy.js: " />
 
   <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
   <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/styles.css">
@@ -23,8 +23,7 @@
     <script src="new_dataset.js"></script>
     <script type="text/javascript" src="canvg.js"></script>
     <script type="text/javascript" src="rgbcolor.js"></script>
-    <!--<script src="../sketchy.js"></script>-->
-    <script src="https://raw.github.com/kjkjava/Sketchy.js/master/sketchy.js"></script>
+    <script src="../sketchy.js"></script>
     <script type="text/javascript">
 			$(document).ready(function() { // FYI, "$(function(){" is an alias to this line
 
@@ -74,7 +73,7 @@
 
 
         //make those dataset boxes things
-        generateDataset();
+        //generateDataset();
         $("#invisible_dataset").hide();
         $("#invisible_dudes").hide();
 
@@ -185,15 +184,16 @@ function generateDataset(){
                 */
 
 
-                best_match = 100
-                best_shape = ""
-                best_index = -1
+                var best_match = 101
+                var best_shape = ""
+                var best_index = -1
 
-                second_match = 100
-                second_shape = ""
-                second_index = -1
+                var second_match = 101
+                var second_shape = ""
+                var second_index = -1
 
-                
+                var matchPerc = 101
+
                 
                 if(algorithm == "hausdorff"){
                   var paths, result, json;
@@ -208,6 +208,10 @@ function generateDataset(){
                   var secMom1 = Sketchy.secondMoment('hiddenDude1');
 
 
+                } else if(algorithm == "shape_context"){
+                  best_match = -1;
+                  matchPerc = -1;
+                  second_match = -1;
                 }
 
                 for (i=0; i<ALL_LETTERS_KEYS.length; i++){
@@ -219,7 +223,7 @@ function generateDataset(){
                     matchPerc = Sketchy.hausdorffDistance('hiddenDude1', 'hiddenDude2',secMom1, secMom2);
                     console.log(ALL_LETTERS_KEYS[i] + " " + matchPerc);
                     //console.log(best_match + ", " + second_match + ", " + matchPerc)
-
+                    //console.log("    best: "+ best_match + ", second: " + second_match + ", match: " + matchPerc)
                     //keep track of the best match
                     if (matchPerc < best_match){
                       //console.log("before best: "+ best_match + ", second: " + second_match + ", match: " + matchPerc)
@@ -231,13 +235,13 @@ function generateDataset(){
                       best_shape = ALL_LETTERS[i]
                       best_index = i
                       //console.log("after best: "+ best_match + ", second: " + second_match + ", match: " + matchPerc)
-                      continue
+                      //continue
                     } else if (matchPerc < second_match){
-                      //console.log("before best: "+ best_match + ", second: " + second_match + ", match: " + matchPerc)
+                      //console.log("-before best: "+ best_match + ", second: " + second_match + ", match: " + matchPerc)
                       second_match = matchPerc
                       second_shape = ALL_LETTERS[i]
                       second_index = i
-                      //console.log("after best: "+ best_match + ", second: " + second_match + ", match: " + matchPerc)
+                      //console.log("-after best: "+ best_match + ", second: " + second_match + ", match: " + matchPerc)
                     }
 
 
@@ -252,11 +256,11 @@ function generateDataset(){
                     console.log(ALL_LETTERS_KEYS[i] + " " + matchPerc);
                      // shape1 and shape2 should be stringified JSON data from Raphael SketchPad
                     //Sketchy.shapeContextMatch = function(shape1, shape2) {
-                    }
+                    
 
 
                     //keep track of the best match
-                    if (matchPerc < best_match){
+                    if (matchPerc > best_match){
                       second_match = best_match
                       second_shape = best_shape
                       second_index = best_index
@@ -264,19 +268,21 @@ function generateDataset(){
                       best_match = matchPerc
                       best_shape = ALL_LETTERS[i]
                       best_index = i
-                      continue //apparently, the else if case can still get hit otherwise
-                    } else if (matchPerc < second_match){
+                      //continue //apparently, the else if case can still get hit otherwise
+                    } else if (matchPerc > second_match){
                       second_match = matchPerc
                       second_shape = ALL_LETTERS[i]
                       second_index = i
                     }
                       //console.log("best: "+ best_match + ", second: " + second_match + ", match: " + matchPerc)
+
+                    }
                   }//end for loop
 
                 //handle the face that this alg returns ##%, not .##%
                 if(algorithm == "shape_context"){
-                  best_match = best_match/100;
-                  second_match = second_match/100;
+                  best_match = best_match;
+                  second_match = second_match;
                 }
 
 
@@ -286,11 +292,12 @@ function generateDataset(){
 
                 //best match
                 percent = 100 - (Math.floor(best_match * 10000)/100)
-                percent = percent.toString().substring(0,5)
-                percentStr = percent;
-                if(algorithm == "hausdorff"){
-                  percentStr = percent + "%"
+                if(algorithm=="shape_context"){
+                  percent = 100 - percent;
                 }
+                percent = percent.toString().substring(0,5)
+                percentStr = percent + "%"
+
 
                 if(ALL_LETTERS_KEYS[best_index]!= null){
                   //update the fields
@@ -300,11 +307,12 @@ function generateDataset(){
 
                 //second best match
                 percent = 100 - (Math.floor(second_match * 10000)/100)
-                percent = percent.toString().substring(0,5)
-                percentStr = percent;
-                if(algorithm == "hausdorff"){
-                  percentStr = percent + "%"
+                if(algorithm=="shape_context"){
+                  percent = 100 - percent;
                 }
+                percent = percent.toString().substring(0,5)
+                percentStr = percent + "%"
+
 
                 if(ALL_LETTERS_KEYS[second_index]!= null){
                   //update the fields
@@ -436,13 +444,13 @@ function generateDataset(){
 
                 } else if(algorithm == "shape_context"){
                   percent = Sketchy.shapeContextMatch(jsontext, JSON.stringify(ALL_LETTERS[ALL_LETTERS_KEYS.indexOf(demo_2_letter)]));
+                  percent = (Math.floor(percent * 10000)/100);
                   percent = percent.toString().substring(0,5)
+                  //percent = percent;
                 }
 
-                percentStr = percent
-                if(algorithm == "hausdorff"){
-                  percentStr = percent + "%"
-                }
+                percentStr = percent + "%"
+
                 console.log("Result: " + percent);
 
                 //check for empty sketchpad
@@ -735,10 +743,11 @@ function generateDataset(){
 
               } else if(algorithm == "shape_context"){
                 percent = Sketchy.shapeContextMatch(jsontext, JSON.stringify(some_number_shape));
+                percent = (Math.floor(percent * 10000)/100);
                 percent = percent.toString().substring(0,5)
-                percentStr = "    (" + percent + " wrong)"
+                percentStr = "    (" + percent + "% match)"
 
-                  if(percent < 16){  //55%
+                  if(percent > 60){  //55%
                     setAnswer(true, percentStr);
                   } else {
                     setAnswer(false, percentStr);
@@ -870,14 +879,13 @@ function generateDataset(){
 
                 } else if(algorithm == "shape_context"){
                   percent = Sketchy.shapeContextMatch(demo_4_json_1, demo_4_json_2);
+                  percent = (Math.floor(percent * 10000)/100);
                   percent = percent.toString().substring(0,5)
                 }
 
-                //eventually, this is all we'll need
-                percentStr = percent;
-                if(algorithm == "hausdorff"){
-                  percentStr = percent + "%"
-                }
+                                
+                percentStr = percent + "%"
+                
 
                 //check for empty sketchpads
                 if (demo_4_json_1 == "[]" || demo_4_json_2 == "[]" ){
@@ -945,20 +953,22 @@ function generateDataset(){
 
 
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
+      <!-- HEADER -->
+      <div id="header_wrap" class="outer">
         <header class="inner">
-          <a id="forkme_banner" href="https://github.com/kjkjava/Sketchy.js">View on GitHub</a>
+          <a id="forkme_banner" href="">View on GitHub</a>
+
           <div class="align_middle">
-          <h1 id="project_title">Sketchy.js</h1>
-          <h2 id="project_tagline">Shape matching for mere mortals.</h2>
-        </div>
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/kjkjava/Sketchy.js/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/kjkjava/Sketchy.js/tarball/master">Download this project as a tar.gz file</a>
-            </section>
+            <h1 id="project_title">Sketchy.js</h1>
+            <h2 id="project_tagline">Simple shape matching</h2>
+          </div>
+
+          <section id="downloads">
+            <a class="zip_download_link" href="">Download this project as a .zip file</a>
+            <a class="tar_download_link" href="">Download this project as a tar.gz file</a>
+          </section>
         </header>
-    </div>
+      </div>
 
       <!-- MAIN CONTENT -->
       <div id="main_content_wrap" class="outer">
@@ -1093,7 +1103,7 @@ function generateDataset(){
     <!-- FOOTER  -->
     <div id="footer_wrap" class="outer">
       <footer class="inner">
-        <p class="copyright">Sketchy.js maintained by <a href="https://github.com/kjkjava">kjkjava</a></p>
+        <p class="copyright">Sketchy.js maintained by <a href="">Kyle and Friends</a></p>
         <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
       </footer>
     </div>

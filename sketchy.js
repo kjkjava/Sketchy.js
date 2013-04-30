@@ -111,7 +111,8 @@
         distanceBinNumber1, angleBinNumber1,
         distanceBinNumber2, angleBinNumber2,
         ksum, compare,
-        i, j, k;
+        i, j, k,
+        result;
 
     // Scatter points around each of the paths.  The algorithm
     // will only be using these points (as feature descriptors),
@@ -251,7 +252,14 @@
         costMatrix[i][j] = 1/2 * ksum;
       }
     }
-    return Sketchy.hungarian(costMatrix, false, true);
+
+    // Normalize total cost by the number of points per shape.
+    result = Sketchy.hungarian(costMatrix, false, true) / pointsPerShape;
+
+    // Convert total error to a percentage
+    result = Math.exp(-1.9 * result);
+
+    return result;
   };
 
   // Sums up the number of points (relative to point pointIndex) in a particular

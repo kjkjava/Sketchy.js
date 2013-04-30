@@ -466,8 +466,8 @@ function generateDataset(){
 
                 
                 //Change colors based on percent
-                if(algorithm=="hausdorff" || algorithm=="shape_context"){
-                  if(percent > 65){
+                if(algorithm=="hausdorff"){
+                  if(percent > 75){
                     $("#demo_2_accuracy").css("background-color", "#75FF75");
                   } else if (percent > 40){
                     $("#demo_2_accuracy").css("background-color", "#FFAD5C");
@@ -476,7 +476,14 @@ function generateDataset(){
 
                   }
                 } else if (algorithm =="shape_context"){
-                  $("#demo_2_accuracy").css("background-color", "#ffffff");
+                  if(percent > 62){
+                    $("#demo_2_accuracy").css("background-color", "#75FF75");
+                  } else if (percent > 40){
+                    $("#demo_2_accuracy").css("background-color", "#FFAD5C");
+                  } else {
+                    $("#demo_2_accuracy").css("background-color", "#FF3333");
+
+                  }
                 }
                 
 
@@ -737,7 +744,7 @@ function generateDataset(){
                   percent = 100 - (Math.floor(percent * 10000)/100);
                   percent = percent.toString().substring(0,5)
                   percentStr = "    (" + percent + "% match)"
-                if(percent > accuracy_threshold){  //60%
+                if(percent > 75){  //60%
                   setAnswer(true, percentStr);
                 } else {
                   setAnswer(false, percentStr);
@@ -898,8 +905,17 @@ function generateDataset(){
 
                 
                 //Apply colors based on the result
-                if(algorithm=="hausdorff" || algorithm=="shape_context"){
-                  if(percent > 70){
+                if(algorithm=="hausdorff" ){
+                  if(percent > 72){
+                    $("#demo_4_results").css("background-color", "#75FF75");
+                  } else if (percent > 50){
+                    $("#demo_4_results").css("background-color", "#FFAD5C");
+                  } else {
+                    $("#demo_4_results").css("background-color", "#FF3333");
+
+                  }
+                } else if(algorithm=="shape_context" ){
+                  if(percent > 65){
                     $("#demo_4_results").css("background-color", "#75FF75");
                   } else if (percent > 50){
                     $("#demo_4_results").css("background-color", "#FFAD5C");

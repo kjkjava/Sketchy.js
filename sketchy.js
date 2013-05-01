@@ -537,10 +537,13 @@
 
 
 
-  // The Hungarian Algorithm (which I will also publish as a standalone library,
-  // Hungarian.js).  It's used in shapeContextMatch.
-  // TODO: Consider making this a required include?  -Kyle
-  // Hungarian Algorithm
+  // The Hungarian Algorithm
+  // This is also published as a standalone library: Hungarian.js
+  // See: https://github.com/kjkjava/Hungarian.js
+  // This version is modified to return the function instead of set
+  // it as a global variable.
+  // This algorithm is used in shapeContextMatch to pair up related
+  // points with minimum cost (which is a normalized distance error).
 
   Sketchy.hungarian = (function() {
     // Expose just the hgAlgorithm method
@@ -564,8 +567,8 @@
           // Number.MAX_VALUE causes overflow on profits.
           // Should be larger or smaller than all matrix values. (i.e. -1 or 999999)
           forbiddenValue = -1, 
-          assignments = [],
-          assignmentsSeen; // [matrix.length] x [2]
+          assignments = [], // [min(matrix.length, matrix[0].length)] x [2]
+          assignmentsSeen;
 
       // Create the cost matrix, so we can work without modifying the
       // original input.

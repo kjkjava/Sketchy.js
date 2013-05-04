@@ -45,7 +45,7 @@
     return paths;
   };
   // Takes in an array of paths, each of which is an array of points in
-  // {x: Number, y: Number} format, and outputs it in Raphael SketchPad-stlye
+  // {x: Number, y: Number} format, and outputs it in Raphael SketchPad-style
   // JSON/SVG data.  Essentially reverses the above and makes the same drawing
   // decisions as Raphael SketchPad (e.g. black, stroke-width of 5).
   Sketchy.convertPointArraysToSVG = function(paths) {
@@ -147,7 +147,7 @@
     distanceMean2 = distanceTotal2/Math.pow(pointsPerShape,2);
 
     // Normalize by the mean distance.  This achieves scale invariance.
-    // Translation invariance is inherant to the fact that distance
+    // Translation invariance is inherent to the fact that distance
     // measurements are made relative to each point.
     for(i=0; i<pointsPerShape; i++) {
       for(j=0; j<pointsPerShape; j++) {
@@ -436,7 +436,7 @@
           distanceCovered = delta;
         }
       } while(distanceCovered < delta);
-      // TODO: discretize currX and currY before pushing
+      // TODO: discretize currX and currY before pushing?
       result.push({x: currX, y: currY});
     }
     // Manually add on the last point

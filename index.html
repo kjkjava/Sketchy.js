@@ -293,10 +293,7 @@ function generateDataset(){
                 console.log("Next match: " + ALL_LETTERS_KEYS[second_index]+ ", " + second_match);
 
                 //best match
-                percent = 100 - (Math.floor(best_match * 10000)/100)
-                if(algorithm=="shape_context"){
-                  percent = 100 - percent;
-                }
+                percent = (Math.floor(best_match * 10000)/100)
                 percent = percent.toString().substring(0,5)
                 percentStr = percent + "%"
 
@@ -308,10 +305,7 @@ function generateDataset(){
                 }
 
                 //second best match
-                percent = 100 - (Math.floor(second_match * 10000)/100)
-                if(algorithm=="shape_context"){
-                  percent = 100 - percent;
-                }
+                percent = (Math.floor(second_match * 10000)/100)
                 percent = percent.toString().substring(0,5)
                 percentStr = percent + "%"
 
@@ -440,7 +434,7 @@ function generateDataset(){
                   percent = Sketchy.hausdorffDistance('hiddenDude1', 'hiddenDude2', secMom1, secMom2);
 
                   //invert the value
-                  percent = 100 - (Math.floor(percent * 10000)/100);
+                  percent = (Math.floor(percent * 10000)/100);
                   percent = percent.toString().substring(0,5)
 
 
@@ -638,9 +632,9 @@ function generateDataset(){
 
             //don't make the user draw a division sign, or multiplication
             //  3 ___ 1 = 3
-            if(solve == 1 && (op == "÷" || op== "×") ){
-              return false;
-            }
+            //if(solve == 1 && (op == "÷" || op== "×") ){
+            //  return false;
+            //}
 
 
             //move along, nothing to see here
@@ -741,7 +735,7 @@ function generateDataset(){
               percent = Sketchy.hausdorffDistance('hiddenDude1', 'hiddenDude2', secMom1, secMom2);
 
                   //invert the value
-                  percent = 100 - (Math.floor(percent * 10000)/100);
+                  percent = (Math.floor(percent * 10000)/100);
                   percent = percent.toString().substring(0,5)
                   percentStr = "    (" + percent + "% match)"
                 if(percent > 75){  //60%
@@ -883,7 +877,7 @@ function generateDataset(){
 
                   percent = Sketchy.hausdorffDistance('hiddenDude1', 'hiddenDude2', secMom1, secMom2);
                   //invert the value
-                  percent = 100 - (Math.floor(percent * 10000)/100);
+                  percent = (Math.floor(percent * 10000)/100);
                   percent = percent.toString().substring(0,5);
 
                 } else if(algorithm == "shape_context"){

@@ -1,19 +1,16 @@
-
-
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Sketchy.js : Shape matching for mere mortals." />
 
-<head>
-  <meta charset='utf-8' />
-  <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-  <meta name="description" content="Sketchy.js : Shape matching for mere mortals." />
-
-  <link rel="stylesheet" type="text/css" media="screen" href="./stylesheets/stylesheet.css">
-  <link rel="stylesheet" type="text/css" media="screen" href="./stylesheets/styles.css">
-  <script src="json2.js"></script>
-  <!-- The // notation will not work well locally on the file:// protocol, so the local fallback will be used. -->
-  <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>-->
-  <script>window.jQuery || document.write('<script src="./jquery-1.9.1.min.js"><\/script>')</script>
+    <link rel="stylesheet" type="text/css" media="screen" href="./stylesheets/stylesheet.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="./stylesheets/styles.css">
+    <script src="json2.js"></script>
+    <!-- The // notation will not work well locally on the file:// protocol, so the local fallback will be used. -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="./jquery-1.9.1.min.js"><\/script>')</script>
 		<!-- jQuery Migrate must be used... see my bug report:
     https://github.com/ianli/raphael-sketchpad/issues/15 -->
     <script src="./jquery-migrate-1.1.1.min.js"></script>
@@ -23,7 +20,6 @@
     <script src="./new_dataset.js"></script>
     <script type="text/javascript" src="./canvg.js"></script>
     <script type="text/javascript" src="./rgbcolor.js"></script>
-
     <!--<script src="../sketchy.js"></script>-->
     <script src="https://raw.github.com/kjkjava/Sketchy.js/master/sketchy.js"></script>
     <script type="text/javascript">
@@ -58,64 +54,59 @@
         });
          // $('#demo_' + demoNum).offset().left - $(this).offset().left + $(this).width()
          $(id).slideDown();
-       });
-
-
-        //set up the first demo
-        initDemo1();
-
-        //set up the second demo
-        initDemo2();
-
-        //set up the third demo
-        initDemo3();
-
-        //set up the fourth demo
-        initDemo4();
-
-
-        //make those dataset boxes things
-        //generateDataset();
-        $("#invisible_dataset").hide();
-        $("#invisible_dudes").hide();
-
-        
-
       });
 
-function generateDataset(){
-        //create a bunch of sketchpads using
-        // jsonArray - array of json objects
-        // divName - a parent div to put them all in
-        function createSketchpads(jsonArray, divName){
-          var objArray = new Array();
-          for(i = 0; i<jsonArray.length; i++){
-            //<div id = "divName_i" class = "sketchpad"></div>
-            newDiv = "<div id='" + divName + "_" + i +"' class='sketchpad'></div>"
-            $("#"+divName).append(newDiv);
 
-            obj = Raphael.sketchpad((divName + "_" + i), {
-              width: 200,
-              height: 200,
-              editing: false,
-              strokes: jsonArray[i]
-            });
+      //set up the first demo
+      initDemo1();
 
-            objArray.push(obj);
-          }
+      //set up the second demo
+      initDemo2();
 
-          $("#"+divName).append("<div class='clear'></div> ")
-          return objArray;
+      //set up the third demo
+      initDemo3();
+
+      //set up the fourth demo
+      initDemo4();
+
+
+      //make those dataset boxes things
+      //generateDataset();
+      $("#invisible_dataset").hide();
+      $("#invisible_dudes").hide();  
+    });
+
+    function generateDataset(){
+      //create a bunch of sketchpads using
+      // jsonArray - array of json objects
+      // divName - a parent div to put them all in
+      function createSketchpads(jsonArray, divName){
+        var objArray = new Array();
+        for(i = 0; i<jsonArray.length; i++){
+          //<div id = "divName_i" class = "sketchpad"></div>
+          newDiv = "<div id='" + divName + "_" + i +"' class='sketchpad'></div>"
+          $("#"+divName).append(newDiv);
+
+          obj = Raphael.sketchpad((divName + "_" + i), {
+                  width: 200,
+                  height: 200,
+                  editing: false,
+                  strokes: jsonArray[i]
+                });
+
+          objArray.push(obj);
         }
 
+        $("#"+divName).append("<div class='clear'></div> ")
+        return objArray;
 
-        //merge the whole dataset
-        var combinedArray = NUMBERS.concat(ALL_LETTERS.concat(OPERATIONS))
-        //make sketchpads for each symbol
-        //var raphObjs = createSketchpads(combinedArray, "invisible_dataset")
-        
+      }
 
-      }//end generateDataset
+      //merge the whole dataset
+      var combinedArray = NUMBERS.concat(ALL_LETTERS.concat(OPERATIONS))
+      //make sketchpads for each symbol
+      //var raphObjs = createSketchpads(combinedArray, "invisible_dataset")
+    } //end generateDataset
 
 
       /////////////////////
@@ -247,9 +238,9 @@ function generateDataset(){
                     }
 
 
-                } else if(algorithm == "shape_context"){
-                  try{
-                    matchPerc = Sketchy.shapeContextMatch(jsontext, JSON.stringify(ALL_LETTERS[i] ));
+                  } else if(algorithm == "shape_context"){
+                    try{
+                      matchPerc = Sketchy.shapeContextMatch(jsontext, JSON.stringify(ALL_LETTERS[i] ));
                       //matchPerc = matchPerc/100;
                     } catch (err){
                       console.log(ALL_LETTERS_KEYS[i] + " - FAILED ")
@@ -258,7 +249,7 @@ function generateDataset(){
                     console.log(ALL_LETTERS_KEYS[i] + " " + matchPerc);
                      // shape1 and shape2 should be stringified JSON data from Raphael SketchPad
                     //Sketchy.shapeContextMatch = function(shape1, shape2) {
-                    
+
 
 
                     //keep track of the best match
@@ -337,8 +328,8 @@ function generateDataset(){
       function initDemo2(){
           //initialize editor 2
           var sketchpad_editor_obj_2= Raphael.sketchpad("demo_2_sketchpad_editor", {
-              width: 200,
-              height: 200,
+            width: 200,
+            height: 200,
               editing: true // default
             });
 
@@ -886,7 +877,7 @@ function generateDataset(){
                   percent = percent.toString().substring(0,5)
                 }
 
-                                
+
                 percentStr = percent + "%"
                 
 
@@ -965,46 +956,43 @@ function generateDataset(){
 
 
 
-          <!-- HEADER -->
-    <div id="header_wrap" class="outer">
+      <!-- HEADER -->
+      <div id="header_wrap" class="outer">
         <header class="inner">
           <a id="forkme_banner" href="https://github.com/kjkjava/Sketchy.js">View on GitHub</a>
           <div class="align_middle">
-          <h1 id="project_title">Sketchy.js</h1>
-          <h2 id="project_tagline">Shape matching for mere mortals.</h2>
-        </div>
+            <h1 id="project_title">Sketchy.js</h1>
+            <h2 id="project_tagline">Shape matching for mere mortals.</h2>
+          </div>
 
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/kjkjava/Sketchy.js/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/kjkjava/Sketchy.js/tarball/master">Download this project as a tar.gz file</a>
-            </section>
+          <section id="downloads">
+            <a class="zip_download_link" href="https://github.com/kjkjava/Sketchy.js/zipball/master">Download this project as a .zip file</a>
+            <a class="tar_download_link" href="https://github.com/kjkjava/Sketchy.js/tarball/master">Download this project as a tar.gz file</a>
+          </section>
         </header>
-    </div>
+      </div>
 
       <!-- MAIN CONTENT -->
       <div id="main_content_wrap" class="outer">
         <section id="main_content" class="inner">
           <div class="align_middle">
            <h3>Welcome to Sketchy.js.</h3>
-
            <p>Sketchy.js is a javscript library that can be used to do simple shape matching.</p>
            <p>Our goal is to compare two shapes and assign a value based on their similarity.  Are they exactly the same?  100%.  Perfectly different?  0%.  Vaguely-put, we consider a shape to be a 2D image made up of contours.  Think of outlines, silhouettes, sketches, et cetera.  This means that in most cases, texture, color, and even gray values are not relevant.</p>
-           <p>Currently, two algorithms have been implemented:<br>  -Hausdorff Distance<br>  -Shape Context Matching</p>
-
-           
-
+           <p>Currently, two algorithms have been implemented:<br>
+             <ul>
+               <li>Hausdorff Distance</li>
+               <li>Shape Context Matching</li>
+             </ul>
+           </p>
            <p>Check out these demos below:</p>
-
          </div>
-
          <div class="demo_wrap">
           <div class="tab_wrap">
-
             <div class="tab" id="tab_4">Compare Two Sketches</div>
             <div class="tab" id="tab_2">Learn the Alphabet</div>
             <div class="tab" id="tab_3">Solve the Equation</div>
             <div class="tab" id="tab_1">Character Recognition</div>
-
           </div>
           <div class="clear"></div>
           <div class="demo" id="demo_1">
@@ -1022,54 +1010,37 @@ function generateDataset(){
             <div class="clear"></div>
             <div class="clear_button button" id="demo_1_clear_button">Clear</div>
             <div class="done_button button" id="demo_1_submit_button">Submit</div>
-
-
-
             <div class="clear"></div>
           </div>
-
           <div class="demo" id="demo_2">
             <p>Sketchy.js can be used to help people practice drawing letters.  This example could pair well with a pen-based tablet.</p>
             <p>Select an algorithm:  <select id="demo_2_algorithm"><option value="hausdorff" >Hausdorff</option><option value="shape_context">Shape Context</option></select></p>
-
             <div id="demo_2_directions">Draw the letter: <b><span id="demo_2_text">Q</span></b></div>
-
             <div class="new_letter_button button" id="demo_2_new_letter_button">New Letter</div>
             <div class="clear"></div>  
             <div id="demo_2_sketchpad_editor" class="sketchpad"></div>
-
             <div class="clear"></div>
             <!--<div class="done_button button" id="demo_2_done_button">Done</div>-->
             <div class="clear_button button" id="demo_2_clear_button">Clear</div>
             <div class="done_button button" id="demo_2_submit_button">Submit</div>
             <div id="demo_2_accuracy" class="accuracy_box">Accuracy:&nbsp; &nbsp;<span id="demo_2_result" class="match_result"></span></div>
             <div class="clear"></div>
-
-
-
           </div>
-
           <div class="demo" id="demo_3">
             <p>In this example, the user must simply complete the equation.  Equations are randomly gererated and then validated to ensure there's no ambiguity and that the equation is easy to solve.</p>
             <p>Select an algorithm:  <select id="demo_3_algorithm"><option value="hausdorff" >Hausdorff</option><option value="shape_context">Shape Context</option></select></p>
             <p>Complete the equation:</p>
             <div id="demo_3_eq"><div id="demo_3_operand_1">1</div><div id="demo_3_operator">+</div><div id="demo_3_operand_2">2</div><div>=</div><div id="demo_3_result">_</div></div>
-
             <div class="clear"></div>
             <div id="demo_3_sketchpad" class="sketchpad"></div>
-
-
             <div class="button_wrap" id="demo_3_button_wrap">
               <div class="new_eq_button button" id="demo_3_new_button">New Equation</div> 
               <div class="clear"></div>
               <div class="done_button button" id="demo_3_done_button">Submit</div>
               <div class="clear"></div>
               <div class="clear_button button" id="demo_3_clear_button">Clear</div>
-
               <div id="demo_3_answer"></div>
-
             </div>
-
             <div class="clear"></div>
           </div>
 
@@ -1082,26 +1053,17 @@ function generateDataset(){
                 <div id="demo_4_results">
                   <!--<div class="compare_button button" id="demo_4_compare_button">Compare</div>-->
                   Similarity: <span id="demo_4_results_text"></span>
-
                 </div>
                 <div class="done_button button" id="demo_4_done_button">Compare</div>
                 <div class="clear_button button" id="demo_4_clear_button">Clear Both</div>
               </div>
               <div id="demo_4_sketchpad_2" class="sketchpad"></div>
-
             </div>
-
             <div class="clear"></div>
-
-
           </div>
-
         </div>
-
       </section>
     </div>
-
-
 
     <div id="invisible_dataset">
     </div>
@@ -1115,14 +1077,10 @@ function generateDataset(){
     <div id="footer_wrap" class="outer">
       <footer class="inner">
         <div class="align_middle">
-        <p class="copyright">Sketchy.js maintained by <a href="https://github.com/kjkjava">kjkjava</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </div>
+          <p class="copyright">Sketchy.js maintained by <a href="https://github.com/kjkjava">kjkjava</a></p>
+          <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+        </div>
       </footer>
     </div>
-
-
-
   </body>
-  </html>
-
+</html>

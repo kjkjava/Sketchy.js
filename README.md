@@ -5,21 +5,36 @@ Shape matching for mere mortals.
 
 About This
 ----------
-Our goal is to compare two shapes and assign a value based on their similarity.  Are they exactly the same?  100%.  Perfectly different?  0%.  Vaguely-put, we consider a shape to be a 2D image made up of contours.  Think of outlines, silhouettes, sketches, et cetera.  This means that in most cases, texture, color, and even gray values are not relevant.
+Sketchy.js is a JavaScript shape matching library.  Input two shapes and get back a percentage value based on their similarity.  Are they exactly the same?  100%.  Perfectly different?  0%.  Currently, only vector paths are supported as shapes, but should the need arise, support for raster graphics could be implemented with relative ease.
 
-We plan to implement different algorithms in this package, and eventually support shapes in a bigger variety of formats, but we must start simple.  Our initial goal is to take JSON-wrapped SVG data in via [Raphael SketchPad](http://ianli.com/sketchpad/) (which uses [Raphaël](http://raphaeljs.com/)), and output a score in the range [0.0, 1.0].  Currently, Sketchy.js itself is framework-agnostic (though including json2.js can't hurt to ensure support by older browsers).  We may end up requiring Raphaël, but you'll likely want to use that for input in the first place.
+Specifically, we wanted to support shapes drawn by hand in-browser.  [Raphael SketchPad](http://ianli.com/sketchpad/) (which uses [Raphaël](http://raphaeljs.com/)) does the task of taking input just fine.  While we use a generic vector path format behind the scenes, we also provide the preprocessing necessary to work directly with SketchPad (which is JSON-wrapped SVG data).
+
+Currently, there are two algorithms implemented to accomplish the task of comparing shapes: Hausdorff distance and shape contexts.  Both work reasonably well, and they each have their advantages, but we recommend the use of shape contexts.  Both functions take two shapes in as arguments, and output a score in the range [0.0, 1.0].  Nota bene: the output scores from the two algorithms are not intended to be compared directly.  They should be similar, but each algorithm has its own mapping from dissimilarity to percentage.
+
+Sketchy.js is framework-agnostic (though including json2.js can't hurt to ensure JSON support by older browsers).  Input must come from somewhere, though, and unless you have a source and the necessary preprocessing, we recommend [Raphael SketchPad](http://ianli.com/sketchpad/).
 
 Practical uses include symbol classification (e.g. [Detexify](http://detexify.kirelabs.org/) and [Shapecatcher](http://shapecatcher.com/)), optical character recognition, sketching games, and a variety of other computer vision tasks.
 
-Stay tuned.
-
 About Us
 --------
-We are three guys working on a project for our computer vision class at The University of Georgia (Spring 2013).  In alphabetical order:
+The original development team was formed for a computer vision term project at The University of Georgia in Spring 2013.  We are, in alphabetical order:
 
 * Kyle Krafka ([kjkjava](https://github.com/kjkjava/))
 * Jordan Marchetto ([jordanmarchetto](https://github.com/jordanmarchetto/))
 * Betim Sojeva ([beddims](https://github.com/beddims/))
+
+Contributors are welcome!
+
+TODO
+----
+* Document overviews and characteristics of each algorithm
+	* Implement (or at least describe what needs to be done) changes that could make it better
+	* Provide different options (enable/disable rotation invariance or scale invariance)
+* Clean up demo code and documentation (polish the project up)
+	* Carefully specify what input formats are expected
+* Rework JavaScript pattern used
+* Reference research papers
+* Automatically support JSON data *or* generic array of point arrays
 
 Development Notes
 -----------------

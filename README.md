@@ -31,10 +31,12 @@ TODO
 	* Implement (or at least describe what needs to be done) changes that could make it better
 	* Provide different options (enable/disable rotation invariance or scale invariance)
 * Clean up demo code and documentation (polish the project up)
-	* Carefully specify what input formats are expected
+	* Carefully specify what input formats are expected and what the return format is (use standard naming conventions)
 * Rework JavaScript pattern used
+	* Hide internal functions
 * Reference research papers
 * Automatically support JSON data *or* generic array of point arrays
+* Error checking (e.g. for proper 2D arrays)
 
 Development Notes
 -----------------

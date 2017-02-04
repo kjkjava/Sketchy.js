@@ -53,6 +53,10 @@ Development Notes
 		* The notion of a path is not well-defined
 		* Strokes are not ordered
 
+License
+-------
+[MIT](https://github.com/kjkjava/Sketchy.js/blob/master/LICENSE) &copy; 2017 Kyle Krafka
+
 Credits
 -------
 * paper.png is from [Subtle Patterns](http://subtlepatterns.com/)

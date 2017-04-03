@@ -177,15 +177,15 @@
                 */
 
 
-                var best_match = 101
+                var best_match = -1
                 var best_shape = ""
                 var best_index = -1
 
-                var second_match = 101
+                var second_match = -1
                 var second_shape = ""
                 var second_index = -1
 
-                var matchPerc = 101
+                var matchPerc = -1
 
                 
                 if(algorithm == "hausdorff"){
@@ -201,10 +201,6 @@
                   var secMom1 = Sketchy.secondMoment('hiddenDude1');
 
 
-                } else if(algorithm == "shape_context"){
-                  best_match = -1;
-                  matchPerc = -1;
-                  second_match = -1;
                 }
 
                 for (i=0; i<ALL_LETTERS_KEYS.length; i++){
@@ -218,7 +214,7 @@
                     //console.log(best_match + ", " + second_match + ", " + matchPerc)
                     //console.log("    best: "+ best_match + ", second: " + second_match + ", match: " + matchPerc)
                     //keep track of the best match
-                    if (matchPerc < best_match){
+                    if (matchPerc > best_match){
                       //console.log("before best: "+ best_match + ", second: " + second_match + ", match: " + matchPerc)
                       second_match = best_match
                       second_shape = best_shape
@@ -229,7 +225,7 @@
                       best_index = i
                       //console.log("after best: "+ best_match + ", second: " + second_match + ", match: " + matchPerc)
                       //continue
-                    } else if (matchPerc < second_match){
+                    } else if (matchPerc > second_match){
                       //console.log("-before best: "+ best_match + ", second: " + second_match + ", match: " + matchPerc)
                       second_match = matchPerc
                       second_shape = ALL_LETTERS[i]
@@ -272,20 +268,12 @@
                     }
                   }//end for loop
 
-                //handle the face that this alg returns ##%, not .##%
-                if(algorithm == "shape_context"){
-                  best_match = best_match;
-                  second_match = second_match;
-                }
-
-
                 //output result
                 console.log("Best match: " + ALL_LETTERS_KEYS[best_index] + ", " + best_match);
                 console.log("Next match: " + ALL_LETTERS_KEYS[second_index]+ ", " + second_match);
 
                 //best match
-                percent = (Math.floor(best_match * 10000)/100)
-                percent = percent.toString().substring(0,5)
+                percent = (best_match * 100).toFixed(2)
                 percentStr = percent + "%"
 
 
